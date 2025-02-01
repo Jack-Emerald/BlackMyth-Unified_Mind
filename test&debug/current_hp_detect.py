@@ -7,6 +7,14 @@ import time
 IMG_WIDTH = 1920  # Game window width
 IMG_HEIGHT = 1080  # Game window height
 
+# Perform template matching (if you have the HP bar template)
+# For this step, we assume you've already found the position of the HP bar using template matching.
+# For the sake of this example, let's assume you know the region, for instance:
+# HP bar's top-left corner (x, y) and width (w) and height (h)
+x, y, w, h = 201,980,325, 8
+
+x1, y1, w1, h1 = 675,913,570, 8
+
 # Define the threshold for white pixels (full HP)
 lower_white = np.array([0, 0, 175])  # Lower bound for white color
 upper_white = np.array([180, 30, 255])  # Upper bound for white color
@@ -28,22 +36,11 @@ while True:
     # Cut the frame to the game window size (based on the offset)
     frame = frame[46:IMG_HEIGHT + 46, 12:IMG_WIDTH + 12]  # Adjust based on your window position
 
-    # Perform template matching (if you have the HP bar template)
-    # For this step, we assume you've already found the position of the HP bar using template matching.
-    # For the sake of this example, let's assume you know the region, for instance:
-    # HP bar's top-left corner (x, y) and width (w) and height (h)
-    x, y, w, h = 201, 980, 322, 10
-
     # Extract the HP bar region from the frame
     hp_image = frame[y:y + h, x:x + w]
+    boss_hp_image = frame[y1:y1 + h1, x1:x1 + w1]
 
-    # print(f"Sample pixel values in HP bar region (top-left): {hp_image[0, 0]}")
 
-    # Calculate the four corners of the detected HP bar region
-    top_left = (x, y)
-    top_right = (x + w, y)
-    bottom_left = (x, y + h)
-    bottom_right = (x + w, y + h)
 
     # Print the color of the pixel at the bottom-right corner
     # bottom_right_color = hp_image[h - 5, w - 1]
@@ -52,25 +49,25 @@ while True:
     # Apply color filtering to detect white pixels (representing HP)
     hsv = cv2.cvtColor(hp_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
     mask = cv2.inRange(hsv, lower_white, upper_white)  # Create a mask for white pixels
+    hsv_boss = cv2.cvtColor(boss_hp_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
+    mask_boss = cv2.inRange(hsv_boss, lower_white, upper_white)  # Create a mask for white pixels
 
     # Debug: Show the mask to check if white pixels are being detected
     cv2.imshow('Mask', mask)
-    print(f"White pixel count in mask: {np.sum(mask == 255)}")
+    print(f"White pixel count in player hp bar: {np.sum(mask == 255)}")
+    cv2.imshow('Mask', mask_boss)
+    print(f"White pixel count in boss hp bar: {np.sum(mask_boss == 255)}")
 
     # Find all white pixels (full HP) in the mask
     matches = np.argwhere(mask == 255)
     full_hp_percentage = len(matches) / (hp_image.shape[1] * hp_image.shape[0])  # Calculate HP percentage
 
-    # Print the coordinates of the four corners
-    '''
-    print(f"Top-left corner: {top_left}")
-    print(f"Top-right corner: {top_right}")
-    print(f"Bottom-left corner: {bottom_left}")
-    print(f"Bottom-right corner: {bottom_right}")
-    '''
+    boss_matches = np.argwhere(mask_boss == 255)
+    boss_hp_percentage = len(boss_matches) / (boss_hp_image.shape[1] * boss_hp_image.shape[0])  # Calculate HP percentage
 
     # Print the calculated HP percentage
-    print(f"Calculated HP percentage: {full_hp_percentage * 100:.2f}%")
+    print(f"player HP percentage: {full_hp_percentage * 100:.2f}%")
+    print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
     # Wait for 0.5 seconds before capturing the next frame
     time.sleep(0.5)
