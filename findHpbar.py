@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 # Load the game window screenshot and template (HP bar)
 game_frame = cv2.imread('pic2.png')
 template = cv2.imread('pic1.png')
@@ -16,8 +17,7 @@ x, y = max_loc
 h, w = template.shape[:2]
 
 # set bar position manually
-x,y,w,h = 201,980,322, 10
-
+x,y,w,h = 201,980,325, 8
 
 # Draw a rectangle around the matched region for visualization
 cv2.rectangle(game_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -29,10 +29,25 @@ bottom_left = (x, y + h)
 bottom_right = (x + w, y + h)
 
 # Print the coordinates of the four corners
-print(f"Top-left corner: {top_left}")
-print(f"Top-right corner: {top_right}")
-print(f"Bottom-left corner: {bottom_left}")
-print(f"Bottom-right corner: {bottom_right}")
+print(f"Player Top-left corner: {top_left}")
+print(f"Player Top-right corner: {top_right}")
+print(f"Player Bottom-left corner: {bottom_left}")
+print(f"Player Bottom-right corner: {bottom_right}")
+
+x,y,w,h = 675,913,570, 8
+cv2.rectangle(game_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+# Calculate the four corners of the detected HP bar region
+top_left = (x, y)
+top_right = (x + w, y)
+bottom_left = (x, y + h)
+bottom_right = (x + w, y + h)
+
+# Print the coordinates of the four corners
+print(f"Boss Top-left corner: {top_left}")
+print(f"Boss Top-right corner: {top_right}")
+print(f"Boss Bottom-left corner: {bottom_left}")
+print(f"Boss Bottom-right corner: {bottom_right}")
 
 # Show the result
 cv2.imshow('Matched Result', game_frame)
