@@ -16,7 +16,7 @@ def mark_position(a,b,c,d):
 
 
 # Load the game window screenshot and template (HP bar)
-game_frame = cv2.imread('pic2.png')
+game_frame = cv2.imread('captured_game_window.png')
 template = cv2.imread('pic1.png')
 
 # Perform template matching
@@ -30,13 +30,13 @@ x, y = max_loc
 h, w = template.shape[:2]
 
 #player hp bar
-mark_position(201,980,325, 8)
+mark_position(201,983,325, 8)
 #boss hp bar
-mark_position(675,913,570, 8)
+mark_position(677,913,570, 8)
 
-mark_position(1810,1000,1, 1)
-mark_position(1800,1020,1, 1)
-mark_position(1780,1040,1, 1)
+mark_position(1815,997,1, 1)
+mark_position(1802,1020,1, 1)
+mark_position(1782,1040,1, 1)
 # Show the result
 cv2.imshow('Matched Result', game_frame)
 cv2.waitKey(0)

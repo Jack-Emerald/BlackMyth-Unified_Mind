@@ -1,6 +1,9 @@
 import mss
 import numpy as np
 import cv2
+import time
+
+time.sleep(10)
 
 # Define the game window size
 IMG_WIDTH = 1920

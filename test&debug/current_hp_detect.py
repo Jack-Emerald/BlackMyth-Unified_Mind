@@ -15,9 +15,17 @@ x, y, w, h = 201,980,325, 8
 
 x1, y1, w1, h1 = 675,913,570, 8
 
+charge_points = [(1040, 1782), (1020, 1802), (997, 1815)]
+
 # Define the threshold for white pixels (full HP)
 lower_white = np.array([0, 0, 175])  # Lower bound for white color
 upper_white = np.array([180, 30, 255])  # Upper bound for white color
+
+# Define the threshold for the charge point colors in HSV
+# We need a range that captures the colors [255, 255, 234], [255, 255, 226], [255, 255, 220]
+lower_charge = np.array([0, 0, 200])  # Lower bound for light yellow color (light yellow shades)
+upper_charge = np.array([50, 100, 255])  # Upper bound for light yellow color
+
 
 # Initialize mss to capture the screen
 sct = mss.mss()
@@ -42,9 +50,13 @@ while True:
 
 
 
-    # Print the color of the pixel at the bottom-right corner
-    # bottom_right_color = hp_image[h - 5, w - 1]
-    # print(f"Color of pixel at bottom-right corner: {bottom_right_color}")
+    # Print the color of the pixel at charge points
+    first_charge = frame[1040, 1782]
+    print(f"Color of pixel at 1 charge: {first_charge}")
+    second_charge = frame[1020, 1802]
+    print(f"Color of pixel at 2 charge: {second_charge}")
+    third_charge = frame[997, 1815]
+    print(f"Color of pixel at 3 charge: {third_charge}")
 
     # Apply color filtering to detect white pixels (representing HP)
     hsv = cv2.cvtColor(hp_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
@@ -52,11 +64,32 @@ while True:
     hsv_boss = cv2.cvtColor(boss_hp_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
     mask_boss = cv2.inRange(hsv_boss, lower_white, upper_white)  # Create a mask for white pixels
 
+    # Initialize the charge point count
+    charge_count = 0
+
+    # Loop through the defined charge points and check their colors individually
+    for charge in charge_points:
+        # Get the pixel color at the charge point (directly)
+        charge_pixel = frame[charge[0], charge[1]]
+
+        # Convert the charge point pixel to HSV (no need to convert the whole frame)
+        hsv_pixel = cv2.cvtColor(np.uint8([[charge_pixel]]), cv2.COLOR_RGB2HSV)[0][0]
+
+        # Manually check if the pixel is within the range defined for charge points
+        if (lower_charge[0] <= hsv_pixel[0] <= upper_charge[0] and
+                lower_charge[1] <= hsv_pixel[1] <= upper_charge[1] and
+                lower_charge[2] <= hsv_pixel[2] <= upper_charge[2]):
+            charge_count += 1
+
+
+    # Print the number of charge points that are activated
+    print(f"Number of charged points: {charge_count}/3")
+
     # Debug: Show the mask to check if white pixels are being detected
     cv2.imshow('Mask', mask)
-    print(f"White pixel count in player hp bar: {np.sum(mask == 255)}")
+    #print(f"White pixel count in player hp bar: {np.sum(mask == 255)}")
     cv2.imshow('Mask', mask_boss)
-    print(f"White pixel count in boss hp bar: {np.sum(mask_boss == 255)}")
+    #print(f"White pixel count in boss hp bar: {np.sum(mask_boss == 255)}")
 
     # Find all white pixels (full HP) in the mask
     matches = np.argwhere(mask == 255)
@@ -70,4 +103,4 @@ while True:
     print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
     # Wait for 0.5 seconds before capturing the next frame
-    time.sleep(0.5)
+    time.sleep(1)
