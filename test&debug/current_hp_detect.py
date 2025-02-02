@@ -2,6 +2,7 @@ import mss
 import numpy as np
 import cv2
 import time
+import matplotlib.pyplot as plt
 
 # Define the screen dimensions for the game window
 IMG_WIDTH = 1920  # Game window width
@@ -16,13 +17,13 @@ x, y, w, h = 201,980,325, 8
 x1, y1, w1, h1 = 675,913,570, 8
 
 charge_points = [(1040, 1782), (1020, 1802), (997, 1815)]
-
+'''
 lower_white = np.array([0, 0, 175])  # Lower bound for white color
 upper_white = np.array([180, 40, 255])  # Upper bound for white color
-
+'''
 # Define the threshold for white pixels (full HP)
-lower_white = np.array([0, 0, 15])  # Lower bound for white color
-upper_white = np.array([180, 200, 120])  # Upper bound for white color
+lower_white = np.array([0, 0, 145])  # Lower bound for white color
+upper_white = np.array([170, 145, 225])  # Upper bound for white color
 
 
 
@@ -39,6 +40,9 @@ def in_game_status():
 
     # Select the first monitor (or adjust based on your setup)
     monitor = sct.monitors[1]
+
+    # Store player HP for graphing after the loop
+    player_hp_history = []
 
     # Loop to continuously check the HP bar
     while True:
@@ -106,22 +110,37 @@ def in_game_status():
         boss_matches = np.argwhere(mask_boss == 255)
         boss_hp_percentage = len(boss_matches) / (boss_hp_image.shape[1] * boss_hp_image.shape[0])  # Calculate HP percentage
 
+        # Store the player HP for graphing after the loop ends
+        player_hp_history.append(full_hp_percentage * 100)  # Store as percentage
+
         # Print the calculated HP percentage
         print(f"player HP percentage: {full_hp_percentage * 100:.2f}%")
         print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
-        if boss_hp_percentage < 0.01 or full_hp_percentage < 0.01: #本局游戏结束
-            return
+        if boss_hp_percentage < 0.01: #本局游戏结束
+            break
 
         # Wait for 0.5 seconds before capturing the next frame
         time.sleep(0.5)
 
+    return player_hp_history
+
+def plot_hp_graph(player_hp_history):
+    # Plot the player's HP over time
+    plt.plot(player_hp_history)
+    plt.title("Player HP Over Time")
+    plt.xlabel("Time (Frame #)")
+    plt.ylabel("Player HP (%)")
+    plt.grid(True)
+    plt.show()
 
 def victory_check():
     return
 
 if __name__ == "__main__":
-    while True:
-        #print("\n begin in game status check.")
-        in_game_status()
+    # Get the player HP history during the game
+    player_hp_history = in_game_status()
+
+    # After the game ends, plot the HP graph
+    plot_hp_graph(player_hp_history)
         #检测是否胜利
