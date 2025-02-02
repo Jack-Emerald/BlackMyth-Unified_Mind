@@ -103,4 +103,4 @@ while True:
     print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
     # Wait for 0.5 seconds before capturing the next frame
-    time.sleep(1)
+    time.sleep(0.5)
