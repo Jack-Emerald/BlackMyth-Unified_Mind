@@ -16,34 +16,45 @@ def mark_position(a,b,c,d):
 
 
 # Load the game window screenshot and template (HP bar)
-game_frame = cv2.imread('captured_game_window.png')
-template = cv2.imread('pic1.png')
+game_frame = cv2.imread('pic2.png')
+#template = cv2.imread('pic1.png')
 
 # Perform template matching
-result = cv2.matchTemplate(game_frame, template, cv2.TM_CCOEFF_NORMED)
+#result = cv2.matchTemplate(game_frame, template, cv2.TM_CCOEFF_NORMED)
 
 # Get the location of the best match
-min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-x, y = max_loc
+#min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+#x, y = max_loc
 
 # Get the width and height of the template
-h, w = template.shape[:2]
+#h, w = template.shape[:2]
 
 #player hp bar
 mark_position(201,983,325, 8)
 #boss hp bar
 mark_position(677,913,570, 8)
 
+#change points 3,2,1
 mark_position(1815,997,1, 1)
 mark_position(1802,1020,1, 1)
 mark_position(1782,1040,1, 1)
+
+
+mark_position(211, 985,1, 1)
+
+#vanquished word(boss dead)
+mark_position(310,150,250, 50)
+
+#return word(player dead)
+mark_position(120,150,130, 50)
+
 # Show the result
 cv2.imshow('Matched Result', game_frame)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 # Extract the HP bar region from the game frame
-hp_bar_region = game_frame[y:y + h, x:x + w]
+#hp_bar_region = game_frame[y:y + h, x:x + w]
 
 # Now you can apply the existing HP calculation logic on this region
 # Example: curr_hp = get_current_hp(hp_bar_region)
