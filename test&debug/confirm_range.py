@@ -31,7 +31,8 @@ while True:
     frame = frame[46:1080 + 46, 12:1920 + 12]  # Adjust based on your window position
 
     # Get the pixel color at the specified coordinates
-    pixel_color = frame[985, 211]  # (y, x) format
+    #pixel_color = frame[985, 211]  # (y, x) format
+    pixel_color = frame[918, 700]  # (y, x) format
 
     # Convert the pixel color to HSV
     hsv_pixel = cv2.cvtColor(np.uint8([[pixel_color]]), cv2.COLOR_RGB2HSV)[0][0]

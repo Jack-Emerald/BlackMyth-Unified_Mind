@@ -22,8 +22,8 @@ lower_white = np.array([0, 0, 175])  # Lower bound for white color
 upper_white = np.array([180, 40, 255])  # Upper bound for white color
 '''
 # Define the threshold for white pixels (full HP)
-lower_white = np.array([0, 0, 145])  # Lower bound for white color
-upper_white = np.array([170, 145, 225])  # Upper bound for white color
+lower_white = np.array([0, 0, 100])  # Lower bound for white color
+upper_white = np.array([180, 160, 230])  # Upper bound for white color
 
 
 
@@ -43,6 +43,7 @@ def in_game_status():
 
     # Store player HP for graphing after the loop
     player_hp_history = []
+    boss_hp_history = []
 
     # Loop to continuously check the HP bar
     while True:
@@ -112,20 +113,23 @@ def in_game_status():
 
         # Store the player HP for graphing after the loop ends
         player_hp_history.append(full_hp_percentage * 100)  # Store as percentage
+        boss_hp_history.append(boss_hp_percentage * 100)
 
         # Print the calculated HP percentage
-        print(f"player HP percentage: {full_hp_percentage * 100:.2f}%")
+        #print(f"player HP percentage: {full_hp_percentage * 100:.2f}%")
         print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
-        if boss_hp_percentage < 0.01: #本局游戏结束
+        if (boss_hp_percentage < 0.01 or full_hp_percentage <
+
+                0.01): #本局游戏结束
             break
 
         # Wait for 0.5 seconds before capturing the next frame
         time.sleep(0.5)
 
-    return player_hp_history
+    return player_hp_history, boss_hp_history
 
-def plot_hp_graph(player_hp_history):
+def plot_hp_graph(player_hp_history,boss_hp_history):
     # Plot the player's HP over time
     plt.plot(player_hp_history)
     plt.title("Player HP Over Time")
@@ -134,13 +138,20 @@ def plot_hp_graph(player_hp_history):
     plt.grid(True)
     plt.show()
 
+    plt.plot(boss_hp_history)
+    plt.title("boss HP Over Time")
+    plt.xlabel("Time (Frame #)")
+    plt.ylabel("boss HP (%)")
+    plt.grid(True)
+    plt.show()
+
 def victory_check():
     return
 
 if __name__ == "__main__":
     # Get the player HP history during the game
-    player_hp_history = in_game_status()
+    player_hp_history,boss_hp_history = in_game_status()
 
     # After the game ends, plot the HP graph
-    plot_hp_graph(player_hp_history)
-        #检测是否胜利
+    plot_hp_graph(player_hp_history,boss_hp_history)
+     #检测是否胜利

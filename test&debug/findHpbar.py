@@ -34,6 +34,8 @@ mark_position(201,983,325, 8)
 #boss hp bar
 mark_position(677,913,570, 8)
 
+mark_position(700,918,1, 1)
+
 #change points 3,2,1
 mark_position(1815,997,1, 1)
 mark_position(1802,1020,1, 1)

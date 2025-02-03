@@ -20,6 +20,7 @@ class EldenReward:
         self.time_since_dmg_taken = time.time()
         self.death = False
         self.max_stam = config["PLAYER_STAMINA"]
+        self.previous_charge = 0
         self.curr_charge = 0
         self.previous_boss_hp = 1.0
         self.curr_boss_hp = 1.0
@@ -174,9 +175,13 @@ class EldenReward:
 
         '''📍1 Getting/Setting current values'''
         self.curr_hp = self.get_current_hp(frame)
+
+        self.previous_charge = self.curr_charge
         self.curr_charge = self.get_current_stamina(frame)
+
         self.previous_boss_hp = self.curr_boss_hp #record previous hp to see if there is a damage
         self.curr_boss_hp = self.get_boss_hp(frame)
+
         if first_step: self.time_since_dmg_taken = time.time() - 10  # Setting the time_since_dmg_taken to 10 seconds ago so we dont get a negative reward at the start of the game
 
         self.death = False
@@ -206,6 +211,8 @@ class EldenReward:
 
         self.prev_hp = self.curr_hp  # Update prev_hp to curr_hp
 
+
+
         '''📍3 Boss Rewards'''
         if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
             boss_dmg_reward = 0
@@ -222,6 +229,13 @@ class EldenReward:
             percent_through_fight_reward = 0
             if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
                 percent_through_fight_reward = self.curr_boss_hp * 15
+
+        '''📍4 charge rewards'''
+        charge_reward = 0
+        charge_change = self.previous_charge - self.curr_charge
+        if charge_change > 0: # reward if we use charge points
+            charge_reward = 50*charge_change
+
 
         '''📍4 PVP rewards'''
         pvp_reward = 0
@@ -253,7 +267,7 @@ class EldenReward:
 
         '''📍5 Total Reward / Return'''
         if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
-            total_reward = hp_reward + boss_dmg_reward + time_since_taken_dmg_reward + percent_through_fight_reward
+            total_reward = hp_reward + boss_dmg_reward + charge_reward + time_since_taken_dmg_reward + percent_through_fight_reward
         else:
             total_reward = hp_reward + time_since_taken_dmg_reward + pvp_reward
 
