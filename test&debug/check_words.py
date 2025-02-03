@@ -67,6 +67,8 @@ if __name__ == "__main__":
 
 
     while True:
+        time.sleep(2)
+        print("Fighting...")
         # Capture the entire screen as an image
         sct_img = sct.grab(monitor)
 
@@ -79,10 +81,11 @@ if __name__ == "__main__":
         # Create the screen checker instance with debugging enabled
         checker = ScreenChecker(debug_mode=False)
 
-        result1, result2 = checker.check_for_conclusion_screen(frame)
+        player_win, boss_win = checker.check_for_conclusion_screen(frame)
 
-        print("Player wins?", result1)
-        print("Boss wins?", result2)
+        if player_win or boss_win:
+            break
+
 
         # Display the captured frame with the rectangle drawn around the text region
         #cv2.imshow("Captured Screen with Frame", frame)
@@ -90,8 +93,13 @@ if __name__ == "__main__":
         # Wait for a key press to close the window
         #cv2.waitKey(0)
         #cv2.destroyAllWindows()
+    if boss_win:
+        print("Boss wins!", boss_win)
+    elif player_win:
+        print("Player wins!", player_win)
+    else:
+        print("error!")
 
-        time.sleep(2)
 
     # Display the captured frame with the rectangle drawn around the text region
     #cv2.imshow("Captured Screen with Frame", frame)
