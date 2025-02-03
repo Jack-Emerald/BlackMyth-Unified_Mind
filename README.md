@@ -6,7 +6,7 @@ Reinforcement learning designed for black myth wukong
 
 待解决：
 击败boss或角色死亡都会导致双方血条无法识别。
-
+文字识别还有问题
 
 已解决
 手柄使用技能会导致模糊，以至于血条无法识别。
