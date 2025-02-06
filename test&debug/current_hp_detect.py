@@ -71,6 +71,10 @@ def in_game_status():
         third_charge = frame[997, 1815]
         #print(f"Color of pixel at 3 charge: {third_charge}")
 
+        # Print the color of the pixel at charge points
+        first_charge = frame[1040, 1782]
+        # print(f"Color of pixel at 1 charge: {first_charge}")
+
         # Apply color filtering to detect white pixels (representing HP)
         hsv = cv2.cvtColor(hp_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
         mask = cv2.inRange(hsv, lower_white, upper_white)  # Create a mask for white pixels

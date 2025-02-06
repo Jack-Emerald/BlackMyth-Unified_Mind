@@ -152,99 +152,55 @@ class EldenEnv(gym.Env):
             pydirectinput.keyDown('d')
             self.action_name = 'd'
         elif action == 5:
-            pydirectinput.keyDown('w')
-            pydirectinput.press('shift')
-            self.action_name = 'dodge-forward'
+            pydirectinput.press('space')
+            self.action_name = 'dodge'
         elif action == 6:
             pydirectinput.keyDown('s')
-            pydirectinput.press('shift')
+            pydirectinput.press('space')
             self.action_name = 'dodge-backward'
         elif action == 7:
             pydirectinput.keyDown('a')
-            pydirectinput.press('shift')
+            pydirectinput.press('space')
             self.action_name = 'dodge-left'
         elif action == 8:
             pydirectinput.keyDown('d')
-            pydirectinput.press('shift')
+            pydirectinput.press('space')
             self.action_name = 'dodge-right'
         elif action == 9:
-            pydirectinput.press('c')
+            pydirectinput.press('k')
             self.action_name = 'attack'
         elif action == 10:
-            pydirectinput.press('v')
+            pydirectinput.press('h')
             self.action_name = 'heavy'
         elif action == 11:
-            pydirectinput.press('x')
-            self.action_name = 'magic'
+            pydirectinput.press('1')
+            self.action_name = 'spell1'
         elif action == 12:  # weapon art light
-            pydirectinput.keyDown('q')
-            time.sleep(0.1)
-            pydirectinput.press('c')
-            pydirectinput.keyUp('q')
-            self.action_name = 'weapon art light'
+            pydirectinput.press('2')
+            self.action_name = 'spell2'
         elif action == 13:  # weapon art heavy
-            pydirectinput.keyDown('q')
-            time.sleep(0.1)
-            pydirectinput.press('v')
-            pydirectinput.keyUp('q')
-            self.action_name = 'weapon art heavy'
-        elif action == 14:  # running attack
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.35)
-            pydirectinput.press('c')
-            pydirectinput.keyUp('shift')
-            self.action_name = 'running attack'
-        elif action == 15:  # running heavy
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.35)
-            pydirectinput.press('v')
-            pydirectinput.keyUp('shift')
-            self.action_name = 'running heavy'
-        elif action == 16:  # running magic
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.35)
-            pydirectinput.press('x')
-            pydirectinput.keyUp('shift')
-            self.action_name = 'running magic'
-        elif action == 17:  # jump attack
+            pydirectinput.press('3')
+            self.action_name = 'spell3'
+        elif action == 14:  # jump attack
             pydirectinput.keyDown('shift')
             pydirectinput.keyDown('w')
             time.sleep(0.2)
             pydirectinput.press('space')
             time.sleep(0.1)
-            pydirectinput.press('c')
+            pydirectinput.press('k')
             pydirectinput.keyUp('shift')
             self.action_name = 'jump attack'
-        elif action == 18:  # jump heavy
+        elif action == 15:  # jump heavy
             pydirectinput.keyDown('shift')
             pydirectinput.keyDown('w')
             time.sleep(0.2)
             pydirectinput.press('space')
             time.sleep(0.1)
-            pydirectinput.press('v')
+            pydirectinput.press('h')
             pydirectinput.keyUp('shift')
             self.action_name = 'jump heavy'
-        elif action == 19:  # jump magic
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.2)
-            pydirectinput.press('space')
-            time.sleep(0.1)
-            pydirectinput.press('x')
-            pydirectinput.keyUp('shift')
-            self.action_name = 'jump magic'
-        elif action == 20:  # crouch attack
-            time.sleep(0.1)
-            pydirectinput.keyDown('ctrl')
-            time.sleep(0.2)
-            pydirectinput.press('c')
-            pydirectinput.keyUp('ctrl')
-            self.action_name = 'crouch attack'
-        elif action == 21 and time.time() - self.time_since_heal > 1.5:  # to prevent spamming heal we only allow it to be pressed every 1.5 seconds
-            pydirectinput.press('e')  # item
+        elif action == 16:  # and time.time() - self.time_since_heal > 1.5 to prevent spamming heal we only allow it to be pressed every 1.5 seconds
+            pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
         elif action == 99:
@@ -419,10 +375,6 @@ class EldenEnv(gym.Env):
         self.reward, self.death, self.boss_death, self.duel_won = self.rewardGen.update(frame,
                                                                                         self.first_step)  # 📍 2. Collect the reward based on the observation (reward of previous step)
 
-        if self.DEBUG_MODE:
-            print('🎁 Reward: ', self.reward)
-            print('🎁 self.death: ', self.death)
-            print('🎁 self.boss_death: ', self.boss_death)
 
 
 
@@ -450,12 +402,24 @@ class EldenEnv(gym.Env):
         if self.death or self.boss_death:
             self.done = True
             print('🐾✔️ game set!')
-
+            player_win, boss_win = self.check_for_conclusion_screen()
+            self.death, self.boss_death = -(player_win), -(boss_win)
         elif (time.time() - self.t_start) > 600:
             self.done = True
             #self.take_action(99)  # warp back to bonfire 需要重启挑战
             print('🐾✔️ Step done (time limit)')
+            player_win, boss_win = self.check_for_conclusion_screen()
+            self.death, self.boss_death = -(player_win), -(boss_win)
 
+        if player_win:
+            self.reward += 420
+        elif boss_win:
+            self.reward -= 420
+
+        if self.DEBUG_MODE:
+            print('🎁 Reward: ', self.reward)
+            print('🎁 player wins: ', player_win)
+            print('🎁 boss wins: ', boss_win)
 
 
         '''📍 4. Taking the action'''
@@ -477,7 +441,7 @@ class EldenEnv(gym.Env):
         spaces_dict = {  # Combining the observations into one dictionary like gym wants it
             'img': observation,
             'prev_actions': self.oneHotPrevActions(self.action_history),
-            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_stam])
+            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_charge])
         }
 
         '''Other variables that need to be updated'''
@@ -542,7 +506,9 @@ class EldenEnv(gym.Env):
             avg_r = total_r / len(self.reward_history)
             print('🔄🎁 Average reward for last run:', avg_r)
 
-        '''📍 3. Checking for loading screen / waiting some time for sucessful reset'''
+
+        '''
+        📍 3. Checking for loading screen / waiting some time for sucessful reset
         if self.GAME_MODE == "PVE":
             self.wait_for_loading_screen()
         else:  # ⚔️
@@ -553,6 +519,7 @@ class EldenEnv(gym.Env):
             self.first_reset = False
             self.wait_for_loading_screen()
             self.duel_lockon.perform()
+        '''
 
         '''📍 4. Walking to the boss'''  # ⚔️we already did this in 📍 3. for PVP
         if self.GAME_MODE == "PVE":
@@ -583,6 +550,8 @@ class EldenEnv(gym.Env):
         self.max_reward = None
         self.rewardGen.prev_hp = 1
         self.rewardGen.curr_hp = 1
+        self.rewardGen.previous_charge = 0
+        self.rewardGen.curr_charge = 0
         self.rewardGen.time_since_dmg_taken = time.time()
         self.rewardGen.curr_boss_hp = 1
         self.rewardGen.prev_boss_hp = 1

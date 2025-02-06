@@ -16,7 +16,7 @@ def mark_position(a,b,c,d):
 
 
 # Load the game window screenshot and template (HP bar)
-game_frame = cv2.imread('pic2.png')
+game_frame = cv2.imread('captured_game_window.png')
 #template = cv2.imread('pic1.png')
 
 # Perform template matching
@@ -49,6 +49,8 @@ mark_position(310,150,250, 50)
 
 #return word(player dead)
 mark_position(120,150,130, 50)
+
+mark_position(950,450,1, 1)
 
 # Show the result
 cv2.imshow('Matched Result', game_frame)

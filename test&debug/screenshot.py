@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import time
 
-time.sleep(10)
+#time.sleep(3)
 
 # Define the game window size
 IMG_WIDTH = 1920
@@ -23,6 +23,10 @@ frame = cv2.cvtColor(np.asarray(sct_img), cv2.COLOR_BGRA2RGB)
 
 # Cut the frame to the size of the game window (adjust the crop coordinates)
 frame = frame[46:IMG_HEIGHT + 46, 12:IMG_WIDTH + 12]
+
+# Print the color of the pixel at charge points
+first_charge = frame[450, 950]
+print(f"Color of pixel at begin: {first_charge}")
 
 # Save the captured game window image
 cv2.imwrite('captured_game_window.png', frame)

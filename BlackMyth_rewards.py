@@ -234,7 +234,7 @@ class EldenReward:
         charge_reward = 0
         charge_change = self.previous_charge - self.curr_charge
         if charge_change > 0: # reward if we use charge points
-            charge_reward = 50*charge_change
+            charge_reward = 20*charge_change
 
 
         '''📍4 PVP rewards'''
