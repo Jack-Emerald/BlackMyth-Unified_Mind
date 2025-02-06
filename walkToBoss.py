@@ -99,7 +99,7 @@ class walkToBoss:
         pydirectinput.press('e')
         time.sleep(1)
         pydirectinput.press('e')
-        time.sleep(19)
+        time.sleep(16)
         self.wait_till_begin()
         time.sleep(3)
         pydirectinput.press('o')
@@ -383,7 +383,7 @@ class walkToBoss:
 def test():
 
     time.sleep(1)
-    walkToBoss(1).perform()e
+    walkToBoss(1).perform()
 
 
 if __name__ == "__main__":

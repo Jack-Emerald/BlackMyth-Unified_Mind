@@ -7,7 +7,7 @@ from gym import spaces
 import pydirectinput
 import pytesseract  # Pytesseract is not just a simple pip install.
 from BlackMyth_rewards import EldenReward
-from move_to_boss import walkToBoss
+from walkToBoss import walkToBoss
 
 N_CHANNELS = 3  # Image format
 IMG_WIDTH = 1920  # Game capture resolution
@@ -21,23 +21,19 @@ DISCRETE_ACTIONS = {'release_wasd': 'release_wasd',
                     's': 'run_backwards',
                     'a': 'run_left',
                     'd': 'run_right',
-                    'w+shift': 'dodge_forwards',
-                    's+shift': 'dodge_backwards',
-                    'a+shift': 'dodge_left',
-                    'd+shift': 'dodge_right',
-                    'c': 'attack',
-                    'v': 'strong_attack',
-                    'x': 'magic',
-                    'q+c': 'weapon_art_light',
-                    'q+v': 'weapon_art_heavy',
-                    'w+c': 'running_attack',
-                    'w+v': 'running_heavy',
-                    'w+x': 'running_magic',
-                    'w+shift+space+c': 'jump_attack',
-                    'w+shift+space+v': 'jump_strong_attack',
-                    'w+shift+space+x': 'jump_magic',
-                    'ctrl + c': 'crouch_attack',
-                    'e': 'use_item'}
+                    'space': 'dodge',
+                    's+space': 'dodge_backwards',
+                    'a+space': 'dodge_left',
+                    'd+space': 'dodge_right',
+                    'k': 'attack',
+                    'h': 'strong_attack',
+                    '1': 'spell1',
+                    '2': 'spell2',
+                    '3': 'spell3',
+                    'r':'heal',
+                    'w+ctrl+space+k': 'jump_attack',
+                    'w+ctrl+space+h': 'jump_heavy_attack'
+                    }
 
 NUMBER_DISCRETE_ACTIONS = len(DISCRETE_ACTIONS)
 NUM_ACTION_HISTORY = 10  # Number of actions the agent can remember
@@ -79,6 +75,9 @@ class EldenEnv(gym.Env):
         self.reward_history = []  # Array of the rewards to calculate the average reward of fight
         self.action_history = []  # Array of the actions that the agent took.
         self.time_since_heal = time.time()  # Time since the last heal
+        self.time_since_spell1 = time.time()
+        self.time_since_spell2 = time.time()
+        self.time_since_spell3 = time.time()
         self.action_name = ''  # Name of the action for logging
         self.MONITOR = config["MONITOR"]  # Monitor to use
         self.DEBUG_MODE = config["DEBUG_MODE"]  # If we are in debug mode
@@ -87,7 +86,7 @@ class EldenEnv(gym.Env):
         self.BOSS_HAS_SECOND_PHASE = config["BOSS_HAS_SECOND_PHASE"]  # If the boss has a second phase
         self.are_in_second_phase = False  # If we are in the second phase of the boss
         if self.GAME_MODE == "PVE":
-            self.walk_to_boss = walkToBoss(config["BOSS"])  # Class to walk to the boss
+            self.walk_to_boss = walkToBoss(1)  # Class to walk to the boss
         else:
             self.matchmaking = walkToBoss(99)  # Matchmaking class for PVP mode
             self.duel_lockon = walkToBoss(100)  # Lock on class to the player in PVP mode
@@ -172,34 +171,29 @@ class EldenEnv(gym.Env):
         elif action == 10:
             pydirectinput.press('h')
             self.action_name = 'heavy'
-        elif action == 11:
+        elif action == 11 and time.time() - self.time_since_spell1 > 50:
             pydirectinput.press('1')
+            self.time_since_spell1 = time.time()
             self.action_name = 'spell1'
-        elif action == 12:  # weapon art light
+        elif action == 12 and time.time() - self.time_since_spell2 > 32:  # weapon art light
             pydirectinput.press('2')
+            self.time_since_spell2 = time.time()
             self.action_name = 'spell2'
-        elif action == 13:  # weapon art heavy
+        elif action == 13 and time.time() - self.time_since_spell3 > 120:  # weapon art heavy
             pydirectinput.press('3')
+            self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
         elif action == 14:  # jump attack
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.2)
-            pydirectinput.press('space')
+            pydirectinput.press('ctrl')
             time.sleep(0.1)
             pydirectinput.press('k')
-            pydirectinput.keyUp('shift')
             self.action_name = 'jump attack'
         elif action == 15:  # jump heavy
-            pydirectinput.keyDown('shift')
-            pydirectinput.keyDown('w')
-            time.sleep(0.2)
-            pydirectinput.press('space')
+            pydirectinput.press('ctrl')
             time.sleep(0.1)
             pydirectinput.press('h')
-            pydirectinput.keyUp('shift')
             self.action_name = 'jump heavy'
-        elif action == 16:  # and time.time() - self.time_since_heal > 1.5 to prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 16 and time.time() - self.time_since_heal > 1.5:  # to prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
@@ -355,7 +349,7 @@ class EldenEnv(gym.Env):
 
         return player_win, boss_win
 
-    '''Step function that is called by train.py'''
+    '''Step function that is called by train1.py'''
 
     def step(self, action):
         # 📍 Lets look at what step does
@@ -365,7 +359,7 @@ class EldenEnv(gym.Env):
         # 📍 4. Take the next action (based on the decision of the agent)
         # 📍 5. Ending the step
         # 📍 6. Returning the observation, the reward, if we are done, and the info
-        # 📍 7*. train.py decides the next action and calls step again
+        # 📍 7*. train1.py decides the next action and calls step again
 
         if self.first_step: print("🐾#1 first step")
 
@@ -398,7 +392,7 @@ class EldenEnv(gym.Env):
             print('🐾✔️ Step done (duel won)')
         '''
 
-
+        player_win, boss_win = False, False
         if self.death or self.boss_death:
             self.done = True
             print('🐾✔️ game set!')
@@ -441,7 +435,7 @@ class EldenEnv(gym.Env):
         spaces_dict = {  # Combining the observations into one dictionary like gym wants it
             'img': observation,
             'prev_actions': self.oneHotPrevActions(self.action_history),
-            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_charge])
+            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_charge * 0.1])
         }
 
         '''Other variables that need to be updated'''
@@ -506,6 +500,11 @@ class EldenEnv(gym.Env):
             avg_r = total_r / len(self.reward_history)
             print('🔄🎁 Average reward for last run:', avg_r)
 
+            # Save avg_r to a file for later use
+            if avg_r is not None:
+                with open("average_rewards.txt", "a") as file:
+                    file.write(f"{avg_r}\n")
+
 
         '''
         📍 3. Checking for loading screen / waiting some time for sucessful reset
@@ -565,7 +564,7 @@ class EldenEnv(gym.Env):
         spaces_dict = {
             'img': observation,  # The image
             'prev_actions': self.oneHotPrevActions(self.action_history),  # The last 10 actions (empty)
-            'state': np.asarray([1.0, 1.0])  # Full hp and full stamina
+            'state': np.asarray([1.0, 0.0])  # Full hp and zero charge
         }
 
         print('🔄✔️ Reset done.')

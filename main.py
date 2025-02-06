@@ -1,4 +1,4 @@
-import train
+import train1
 
 if __name__ == '__main__':
     '''User Settings'''
@@ -19,4 +19,4 @@ if __name__ == '__main__':
 
     '''Start Training'''
     print("💍 EldenRL 💍")
-    train.train(CREATE_NEW_MODEL, env_config)
+    train1.train(CREATE_NEW_MODEL, env_config)
