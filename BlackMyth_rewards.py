@@ -202,13 +202,13 @@ class EldenReward:
         hp_reward = 0
         if not self.death:
             if self.curr_hp > self.prev_hp + self.image_detection_tolerance:  # Reward if we healed)
-                hp_reward = 4*(self.curr_hp-self.prev_hp)
+                hp_reward = 200*(self.curr_hp-self.prev_hp)
             elif self.curr_hp < self.prev_hp - self.image_detection_tolerance:  # Negative reward if we took damage
-                hp_reward = -4*(self.prev_hp - self.curr_hp)
+                hp_reward = -250*(self.prev_hp - self.curr_hp)
                 self.time_since_dmg_taken = time.time()
 
             if self.curr_hp >0.5: # reward for every step if we remain hp > 50%, encourage high hp.
-                hp_reward += 5
+                hp_reward += 10
             elif self.curr_hp < 0.3:
                 hp_reward -= 10 # negative reward for every step if we remain hp < 50%, encourage avoid low hp.
         else:
@@ -232,14 +232,14 @@ class EldenReward:
             else:
                 if self.detect_boss_damaged(
                         frame):  # Reward if we damaged the boss (small tolerance because its a large bar)
-                    boss_dmg_reward = 60*(self.previous_boss_hp - self.curr_boss_hp)
+                    boss_dmg_reward = 5000*(self.previous_boss_hp - self.curr_boss_hp)
                     self.time_since_boss_dmg = time.time()
                 if time.time() - self.time_since_boss_dmg > 4:  # Negative reward if we have not damaged the boss for 5 seconds (every step for as long as we dont damage the boss)
                     boss_dmg_reward = -25
 
             percent_through_fight_reward = 0
             if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
-                percent_through_fight_reward = (1 - self.curr_boss_hp) * 10
+                percent_through_fight_reward = (1 - self.curr_boss_hp) * 20
 
         '''📍4 charge rewards'''
         charge_reward = 0

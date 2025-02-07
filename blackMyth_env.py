@@ -23,17 +23,13 @@ DISCRETE_ACTIONS = {'release_wasd': 'release_wasd',
                     'd': 'run_right',
                     'space': 'dodge',
                     's+space': 'dodge_backwards',
-                    'a+space': 'dodge_left',
-                    'd+space': 'dodge_right',
                     'k': 'attack',
                     'h': 'strong_attack',
                     '1': 'spell1',
                     '2': 'spell2',
                     '3': 'spell3',
                     'r':'heal',
-                    't':'magic',
-                    'w+ctrl+space+k': 'jump_attack',
-                    'w+ctrl+space+h': 'jump_heavy_attack'
+                    't':'magic'
                     }
 
 NUMBER_DISCRETE_ACTIONS = len(DISCRETE_ACTIONS)
@@ -160,48 +156,30 @@ class EldenEnv(gym.Env):
             pydirectinput.press('space')
             self.action_name = 'dodge-backward'
         elif action == 7:
-            pydirectinput.keyDown('a')
-            pydirectinput.press('space')
-            self.action_name = 'dodge-left'
-        elif action == 8:
-            pydirectinput.keyDown('d')
-            pydirectinput.press('space')
-            self.action_name = 'dodge-right'
-        elif action == 9:
             pydirectinput.press('k')
             self.action_name = 'attack'
-        elif action == 10:
+        elif action == 8:
             pydirectinput.press('h')
-            self.action_name = 'heavy'
-        elif action == 11 and time.time() - self.time_since_spell1 > 50:
             time.sleep(0.3)
+            self.action_name = 'heavy'
+        elif action == 9 and time.time() - self.time_since_spell1 > 50:
             pydirectinput.press('1')
             self.time_since_spell1 = time.time()
             self.action_name = 'spell1'
-        elif action == 12 and time.time() - self.time_since_spell2 > 32:
+        elif action == 10 and time.time() - self.time_since_spell2 > 32:
             pydirectinput.press('2')
             self.time_since_spell2 = time.time()
             self.action_name = 'spell2'
-        elif action == 13 and time.time() - self.time_since_spell3 > 120:
-            time.sleep(0.3)
+        elif action == 11 and time.time() - self.time_since_spell3 > 120:
+            time.sleep(1)
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
-        elif action == 14:  # jump attack
-            pydirectinput.press('ctrl')
-            time.sleep(0.1)
-            pydirectinput.press('k')
-            self.action_name = 'jump attack'
-        elif action == 15:  # jump heavy
-            pydirectinput.press('ctrl')
-            time.sleep(0.1)
-            pydirectinput.press('h')
-            self.action_name = 'jump heavy'
-        elif action == 16 and time.time() - self.time_since_heal > 1.5:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 12 and time.time() - self.time_since_heal > 3:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
-        elif action == 17 and time.time() - self.time_since_magic > 600:
+        elif action == 13 and time.time() - self.time_since_magic > 600:
             pydirectinput.press('t')  # item
             self.time_since_magic = time.time()
             self.action_name = 'magic'
