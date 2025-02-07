@@ -209,8 +209,8 @@ class EldenReward:
 
             if self.curr_hp >0.5: # reward for every step if we remain hp > 50%, encourage high hp.
                 hp_reward += 5
-            else:
-                hp_reward -= 5 # negative reward for every step if we remain hp < 50%, encourage avoid low hp.
+            elif self.curr_hp < 0.3:
+                hp_reward -= 10 # negative reward for every step if we remain hp < 50%, encourage avoid low hp.
         else:
             #hp_reward = -420  # Large negative reward for dying
             pass

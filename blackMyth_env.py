@@ -31,6 +31,7 @@ DISCRETE_ACTIONS = {'release_wasd': 'release_wasd',
                     '2': 'spell2',
                     '3': 'spell3',
                     'r':'heal',
+                    't':'magic',
                     'w+ctrl+space+k': 'jump_attack',
                     'w+ctrl+space+h': 'jump_heavy_attack'
                     }
@@ -78,6 +79,7 @@ class EldenEnv(gym.Env):
         self.time_since_spell1 = time.time()
         self.time_since_spell2 = time.time()
         self.time_since_spell3 = time.time()
+        self.time_since_magic = time.time()
         self.action_name = ''  # Name of the action for logging
         self.MONITOR = config["MONITOR"]  # Monitor to use
         self.DEBUG_MODE = config["DEBUG_MODE"]  # If we are in debug mode
@@ -172,14 +174,16 @@ class EldenEnv(gym.Env):
             pydirectinput.press('h')
             self.action_name = 'heavy'
         elif action == 11 and time.time() - self.time_since_spell1 > 50:
+            time.sleep(0.3)
             pydirectinput.press('1')
             self.time_since_spell1 = time.time()
             self.action_name = 'spell1'
-        elif action == 12 and time.time() - self.time_since_spell2 > 32:  # weapon art light
+        elif action == 12 and time.time() - self.time_since_spell2 > 32:
             pydirectinput.press('2')
             self.time_since_spell2 = time.time()
             self.action_name = 'spell2'
-        elif action == 13 and time.time() - self.time_since_spell3 > 120:  # weapon art heavy
+        elif action == 13 and time.time() - self.time_since_spell3 > 120:
+            time.sleep(0.3)
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
@@ -193,10 +197,14 @@ class EldenEnv(gym.Env):
             time.sleep(0.1)
             pydirectinput.press('h')
             self.action_name = 'jump heavy'
-        elif action == 16:  #and time.time() - self.time_since_heal > 1.5 to prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 16 and time.time() - self.time_since_heal > 1.5:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
+        elif action == 17 and time.time() - self.time_since_magic > 600:
+            pydirectinput.press('t')  # item
+            self.time_since_magic = time.time()
+            self.action_name = 'magic'
         elif action == 99:
             pydirectinput.press('esc')
             time.sleep(0.5)

@@ -17,7 +17,7 @@ class walkToBoss:
     def perform(self):
         '''PVE'''
         if self.BOSS == 1:
-            print("boss!")
+            print("we fight Tiger Vanguard")
             self.boss1()
         elif self.BOSS == 2:
             print("boss1")
@@ -95,6 +95,7 @@ class walkToBoss:
 
     def boss1(self):
         #self.put_on_lantern()
+        time.sleep(3)
         print("👉👹 challenge the boss.")
         pydirectinput.press('e')
         time.sleep(1)
