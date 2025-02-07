@@ -37,19 +37,19 @@ while True:
     # Get the pixel color at the specified coordinates
     #pixel_color = frame[985, 211]  # (y, x) format
     #pixel_color = frame[918, 700]  # (y, x) format
-    pixel_color = frame[450, 950]  # (y, x) format
-    pixel_image = frame[450:451, 950:951]
+    pixel_color = frame[918, 770]  # (y, x) format
+    pixel_image = frame[913:921, 757:952]
     hsv = cv2.cvtColor(pixel_image, cv2.COLOR_RGB2HSV)  # Convert to HSV color space
     mask = cv2.inRange(hsv, lower_white, upper_white)  # Create a mask for white pixels
     #cv2.imshow('Mask', mask)
     if np.sum(mask == 255)>=1:
         print("game start.")
-        break
+        #break
 
     # Convert the pixel color to HSV
     hsv_pixel = cv2.cvtColor(np.uint8([[pixel_color]]), cv2.COLOR_RGB2HSV)[0][0]
-    '''
-    # Update the min/max HSV values
+
+    '''    
     min_h = min(min_h, hsv_pixel[0])
     max_h = max(max_h, hsv_pixel[0])
     min_s = min(min_s, hsv_pixel[1])
@@ -57,9 +57,17 @@ while True:
     min_v = min(min_v, hsv_pixel[2])
     max_v = max(max_v, hsv_pixel[2])
     '''
+    # Find the min and max HSV values within the pixel image
+    min_h = min(min_h, np.min(hsv[:, :, 0]))  # min hue
+    max_h = max(max_h, np.max(hsv[:, :, 0]))  # max hue
+    min_s = min(min_s, np.min(hsv[:, :, 1]))  # min saturation
+    max_s = max(max_s, np.max(hsv[:, :, 1]))  # max saturation
+    min_v = min(min_v, np.min(hsv[:, :, 2]))  # min value
+    max_v = max(max_v, np.max(hsv[:, :, 2]))  # max value
+
     # Print the RGB color and the current HSV range
     #print(f"RGB Color: {pixel_color}")
     #print(f"HSV Color: {hsv_pixel}")
-    #print(f"HSV Range: min [{min_h}, {min_s}, {min_v}], max [{max_h}, {max_s}, {max_v}]")
+    print(f"HSV Range: min [{min_h}, {min_s}, {min_v}], max [{max_h}, {max_s}, {max_v}]")
     # Wait for 1 second before capturing the next frame
     time.sleep(0.2)

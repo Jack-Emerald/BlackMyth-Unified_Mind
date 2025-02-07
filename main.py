@@ -18,5 +18,5 @@ if __name__ == '__main__':
 
 
     '''Start Training'''
-    print("💍 EldenRL 💍")
+    print("💍 BlackMytheeRL 💍")
     train1.train(CREATE_NEW_MODEL, env_config)

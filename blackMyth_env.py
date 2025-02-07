@@ -193,7 +193,7 @@ class EldenEnv(gym.Env):
             time.sleep(0.1)
             pydirectinput.press('h')
             self.action_name = 'jump heavy'
-        elif action == 16 and time.time() - self.time_since_heal > 1.5:  # to prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 16:  #and time.time() - self.time_since_heal > 1.5 to prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
@@ -330,7 +330,7 @@ class EldenEnv(gym.Env):
             pytesseract_output2 = pytesseract.image_to_string(mask2, lang='eng', config='--psm 6 --oem 3')
 
             # Check if "Vanquished" or "vanquished" appears in the extracted text
-            player_win = "Van" in pytesseract_output1 or "van" in pytesseract_output1
+            player_win = "Van" in pytesseract_output1 or "ed" in pytesseract_output1
             boss_win = "Ret" in pytesseract_output2 or "turn" in pytesseract_output2
 
             if player_win or boss_win:
@@ -397,18 +397,23 @@ class EldenEnv(gym.Env):
             self.done = True
             print('🐾✔️ game set!')
             player_win, boss_win = self.check_for_conclusion_screen()
-            self.death, self.boss_death = -(player_win), -(boss_win)
+            self.death, self.boss_death = not player_win, not boss_win
+            if self.death:
+                print("Player dead")
+            else:
+                print("boss dead")
         elif (time.time() - self.t_start) > 600:
             self.done = True
             #self.take_action(99)  # warp back to bonfire 需要重启挑战
             print('🐾✔️ Step done (time limit)')
             player_win, boss_win = self.check_for_conclusion_screen()
-            self.death, self.boss_death = -(player_win), -(boss_win)
+            self.death, self.boss_death = not player_win, not boss_win
+
 
         if player_win:
-            self.reward += 420
+            self.reward += 2000
         elif boss_win:
-            self.reward -= 420
+            self.reward -= 2000
 
         if self.DEBUG_MODE:
             print('🎁 Reward: ', self.reward)

@@ -8,13 +8,14 @@ import matplotlib.pyplot as plt
 IMG_WIDTH = 1920  # Game window width
 IMG_HEIGHT = 1080  # Game window height
 
-# Perform template matching (if you have the HP bar template)
-# For this step, we assume you've already found the position of the HP bar using template matching.
-# For the sake of this example, let's assume you know the region, for instance:
+
 # HP bar's top-left corner (x, y) and width (w) and height (h)
 x, y, w, h = 201,980,325, 8
 
+#boss
 x1, y1, w1, h1 = 675,913,570, 8
+#elite
+#x1, y1, w1, h1 = 757,913,395, 8
 
 charge_points = [(1040, 1782), (1020, 1802), (997, 1815)]
 '''
@@ -24,7 +25,6 @@ upper_white = np.array([180, 40, 255])  # Upper bound for white color
 # Define the threshold for white pixels (full HP)
 lower_white = np.array([0, 0, 100])  # Lower bound for white color
 upper_white = np.array([180, 160, 230])  # Upper bound for white color
-
 
 
 
@@ -44,6 +44,8 @@ def in_game_status():
     # Store player HP for graphing after the loop
     player_hp_history = []
     boss_hp_history = []
+
+    previous_boss_hp_percentage = 1.0
 
     # Loop to continuously check the HP bar
     while True:
@@ -113,7 +115,12 @@ def in_game_status():
         full_hp_percentage = len(matches) / (hp_image.shape[1] * hp_image.shape[0])  # Calculate HP percentage
 
         boss_matches = np.argwhere(mask_boss == 255)
+
         boss_hp_percentage = len(boss_matches) / (boss_hp_image.shape[1] * boss_hp_image.shape[0])  # Calculate HP percentage
+        if boss_hp_percentage > previous_boss_hp_percentage:
+            boss_hp_percentage = previous_boss_hp_percentage
+        else:
+            previous_boss_hp_percentage = boss_hp_percentage
 
         # Store the player HP for graphing after the loop ends
         player_hp_history.append(full_hp_percentage * 100)  # Store as percentage
@@ -153,6 +160,7 @@ def victory_check():
     return
 
 if __name__ == "__main__":
+    time.sleep(3)
     # Get the player HP history during the game
     player_hp_history,boss_hp_history = in_game_status()
 

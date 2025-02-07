@@ -38,7 +38,7 @@ class ScreenChecker:
         pytesseract_output2 = pytesseract.image_to_string(mask2, lang='eng', config='--psm 6 --oem 3')
 
         # Check if "Vanquished" or "vanquished" appears in the extracted text
-        player_win = "Van" in pytesseract_output1 or "van" in pytesseract_output1
+        player_win = "Van" in pytesseract_output1 or "ed" in pytesseract_output1
         boss_win = "Ret" in pytesseract_output2 or "turn" in pytesseract_output2
 
         #cv2.rectangle(frame, (120, 150), (120 + 130, 150 + 50), (0, 255, 0), 2)  # Drawing rectangle on the frame
