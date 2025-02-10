@@ -195,16 +195,24 @@ class EldenReward:
 
         self.boss_death = False
         if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
-            if self.curr_boss_hp <= 0.01:  # If the boss hp is below 1% the boss is dead (small tolerance because we want to be sure the boss is actually dead)
+            if self.curr_boss_hp <= 0.005:  # If the boss hp is below 1% the boss is dead (small tolerance because we want to be sure the boss is actually dead)
                 self.boss_death = True
 
         '''📍2 Hp Rewards'''
         hp_reward = 0
         if not self.death:
-            if self.curr_hp > self.prev_hp + self.image_detection_tolerance:  # Reward if we healed)
-                hp_reward = 200*(self.curr_hp-self.prev_hp)
-            elif self.curr_hp < self.prev_hp - self.image_detection_tolerance:  # Negative reward if we took damage
-                hp_reward = -250*(self.prev_hp - self.curr_hp)
+            hp_change = self.curr_hp - self.prev_hp
+            if hp_change > 0.02:  # Reward if we healed)
+
+                if self.prev_hp > 0.7 and hp_change > 0.2:
+                    hp_reward -= 100
+                    print("negative heal")
+                elif self.prev_hp < 0.5:
+                    hp_reward += 100
+                    print("positive heal")
+                hp_reward = 200*hp_change
+            elif hp_change < self.image_detection_tolerance:  # Negative reward if we took damage
+                hp_reward = -250*hp_change
                 self.time_since_dmg_taken = time.time()
 
             if self.curr_hp >0.5: # reward for every step if we remain hp > 50%, encourage high hp.
@@ -232,20 +240,20 @@ class EldenReward:
             else:
                 if self.detect_boss_damaged(
                         frame):  # Reward if we damaged the boss (small tolerance because its a large bar)
-                    boss_dmg_reward = 5000*(self.previous_boss_hp - self.curr_boss_hp)
+                    boss_dmg_reward = 7500*(self.previous_boss_hp - self.curr_boss_hp)
                     self.time_since_boss_dmg = time.time()
                 if time.time() - self.time_since_boss_dmg > 4:  # Negative reward if we have not damaged the boss for 5 seconds (every step for as long as we dont damage the boss)
-                    boss_dmg_reward = -25
+                    boss_dmg_reward = -40
 
             percent_through_fight_reward = 0
             if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
                 percent_through_fight_reward = (1 - self.curr_boss_hp) * 20
 
-        '''📍4 charge rewards'''
+        # '''📍4 charge rewards'''
         charge_reward = 0
-        charge_change = self.previous_charge - self.curr_charge
-        if charge_change > 0: # reward if we use charge points
-            charge_reward = 100*charge_change
+        # charge_change = self.previous_charge - self.curr_charge
+        # if charge_change > 0: # reward if we use charge points
+        #     charge_reward = 100*charge_change
 
 
         '''📍4 PVP rewards'''

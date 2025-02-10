@@ -8,7 +8,7 @@ def train(CREATE_NEW_MODEL, config):
 
 
 	TIMESTEPS = 1			#Learning rate multiplier.
-	HORIZON_WINDOW = 1000	#Lerning rate number of steps before updating the model. ~2min
+	HORIZON_WINDOW = 2000	#Lerning rate number of steps before updating the model. ~6min
 
 
 	'''Creating folder structure'''

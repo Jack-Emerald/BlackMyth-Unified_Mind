@@ -16,20 +16,19 @@ MODEL_WIDTH = int(800 / 2)  # Ai vision resolution
 MODEL_HEIGHT = int(450 / 2)
 
 '''Ai action list'''
-DISCRETE_ACTIONS = {'release_wasd': 'release_wasd',
+DISCRETE_ACTIONS = {
                     'w': 'run_forwards',
                     's': 'run_backwards',
-                    'a': 'run_left',
-                    'd': 'run_right',
                     'space': 'dodge',
                     's+space': 'dodge_backwards',
                     'k': 'attack',
                     'h': 'strong_attack',
+                    'hold h': 'charge_strong_attack',
+                    'unhold h':'do charge_strong_attack',
                     '1': 'spell1',
                     '2': 'spell2',
                     '3': 'spell3',
-                    'r':'heal',
-                    't':'magic'
+                    'r':'heal'
                     }
 
 NUMBER_DISCRETE_ACTIONS = len(DISCRETE_ACTIONS)
@@ -75,7 +74,7 @@ class EldenEnv(gym.Env):
         self.time_since_spell1 = time.time()
         self.time_since_spell2 = time.time()
         self.time_since_spell3 = time.time()
-        self.time_since_magic = time.time()
+        self.time_since_charge = time.time()
         self.action_name = ''  # Name of the action for logging
         self.MONITOR = config["MONITOR"]  # Monitor to use
         self.DEBUG_MODE = config["DEBUG_MODE"]  # If we are in debug mode
@@ -125,64 +124,49 @@ class EldenEnv(gym.Env):
         if action == 0:
             pydirectinput.keyUp('w')
             pydirectinput.keyUp('s')
-            pydirectinput.keyUp('a')
-            pydirectinput.keyUp('d')
-            self.action_name = 'stop'
-        elif action == 1:
-            pydirectinput.keyUp('w')
-            pydirectinput.keyUp('s')
             pydirectinput.keyDown('w')
             self.action_name = 'w'
-        elif action == 2:
+        elif action == 1:
             pydirectinput.keyUp('w')
             pydirectinput.keyUp('s')
             pydirectinput.keyDown('s')
             self.action_name = 's'
-        elif action == 3:
-            pydirectinput.keyUp('a')
-            pydirectinput.keyUp('d')
-            pydirectinput.keyDown('a')
-            self.action_name = 'a'
-        elif action == 4:
-            pydirectinput.keyUp('a')
-            pydirectinput.keyUp('d')
-            pydirectinput.keyDown('d')
-            self.action_name = 'd'
-        elif action == 5:
+        elif action == 2:
             pydirectinput.press('space')
             self.action_name = 'dodge'
-        elif action == 6:
+        elif action == 3:
             pydirectinput.keyDown('s')
             pydirectinput.press('space')
             self.action_name = 'dodge-backward'
-        elif action == 7:
+        elif action == 4:
             pydirectinput.press('k')
             self.action_name = 'attack'
-        elif action == 8:
+        elif action == 5 and (time.time() - self.time_since_charge) > 3:
             pydirectinput.press('h')
-            time.sleep(0.3)
             self.action_name = 'heavy'
-        elif action == 9 and time.time() - self.time_since_spell1 > 50:
+        elif action == 6:
+            pydirectinput.keyDown('h')
+            self.time_since_charge = time.time()
+            self.action_name = 'charge heavy start'
+        elif action == 7 and (time.time() - self.time_since_charge) > 3:
+            pydirectinput.keyUp('h')
+            self.action_name = 'charge heavy stop'
+        elif action == 8 and (time.time() - self.time_since_spell1) > 50:
             pydirectinput.press('1')
             self.time_since_spell1 = time.time()
             self.action_name = 'spell1'
-        elif action == 10 and time.time() - self.time_since_spell2 > 32:
+        elif action == 9 and (time.time() - self.time_since_spell2) > 32:
             pydirectinput.press('2')
             self.time_since_spell2 = time.time()
             self.action_name = 'spell2'
-        elif action == 11 and time.time() - self.time_since_spell3 > 120:
-            time.sleep(1)
+        elif action == 10 and (time.time() - self.time_since_spell3) > 120:
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
-        elif action == 12 and time.time() - self.time_since_heal > 3:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 11 and (time.time() - self.time_since_heal) > 5:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
-        elif action == 13 and time.time() - self.time_since_magic > 600:
-            pydirectinput.press('t')  # item
-            self.time_since_magic = time.time()
-            self.action_name = 'magic'
         elif action == 99:
             pydirectinput.press('esc')
             time.sleep(0.5)
@@ -286,7 +270,7 @@ class EldenEnv(gym.Env):
     def check_for_conclusion_screen(self): # wait until a winner is clear
 
         while True:
-            time.sleep(1)
+            time.sleep(3)
 
             frame = self.grab_screen_shot()
             # The way we determine if we are in a loading screen is by checking if the text "return" or "vanquished" is in the screen.
@@ -426,7 +410,7 @@ class EldenEnv(gym.Env):
         spaces_dict = {  # Combining the observations into one dictionary like gym wants it
             'img': observation,
             'prev_actions': self.oneHotPrevActions(self.action_history),
-            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_charge * 0.1])
+            'state': np.asarray([self.rewardGen.curr_hp, self.rewardGen.curr_boss_hp])
         }
 
         '''Other variables that need to be updated'''
@@ -538,8 +522,8 @@ class EldenEnv(gym.Env):
         self.done = False
         self.first_step = True
         self.max_reward = None
-        self.rewardGen.prev_hp = 1
-        self.rewardGen.curr_hp = 1
+        self.rewardGen.prev_hp = 1.0
+        self.rewardGen.curr_hp = 1.0
         self.rewardGen.previous_charge = 0
         self.rewardGen.curr_charge = 0
         self.rewardGen.time_since_dmg_taken = time.time()
@@ -555,7 +539,7 @@ class EldenEnv(gym.Env):
         spaces_dict = {
             'img': observation,  # The image
             'prev_actions': self.oneHotPrevActions(self.action_history),  # The last 10 actions (empty)
-            'state': np.asarray([1.0, 0.0])  # Full hp and zero charge
+            'state': np.asarray([1.0, 1.0])  # Full hp and zero charge
         }
 
         print('🔄✔️ Reset done.')

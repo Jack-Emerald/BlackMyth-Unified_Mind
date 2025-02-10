@@ -32,9 +32,9 @@ game_frame = cv2.imread('captured_game_window.png')
 #player hp bar
 mark_position(201,983,325, 8)
 #boss hp bar
-mark_position(675,913,570, 8)
+#mark_position(675,913,570, 8)
 #elite hp bar
-#mark_position(757,913,195, 8)
+mark_position(757,913,395, 8)
 
 mark_position(700,918,1, 1)
 mark_position(770,918,1, 1)

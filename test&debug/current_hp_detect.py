@@ -13,9 +13,9 @@ IMG_HEIGHT = 1080  # Game window height
 x, y, w, h = 201,980,325, 8
 
 #boss
-x1, y1, w1, h1 = 675,913,570, 8
+#x1, y1, w1, h1 = 675,913,570, 8
 #elite
-#x1, y1, w1, h1 = 757,913,395, 8
+x1, y1, w1, h1 = 757,913,395, 8
 
 charge_points = [(1040, 1782), (1020, 1802), (997, 1815)]
 '''
@@ -117,10 +117,10 @@ def in_game_status():
         boss_matches = np.argwhere(mask_boss == 255)
 
         boss_hp_percentage = len(boss_matches) / (boss_hp_image.shape[1] * boss_hp_image.shape[0])  # Calculate HP percentage
-        if boss_hp_percentage > previous_boss_hp_percentage:
-            boss_hp_percentage = previous_boss_hp_percentage
-        else:
-            previous_boss_hp_percentage = boss_hp_percentage
+        # if boss_hp_percentage > previous_boss_hp_percentage:
+        #     boss_hp_percentage = previous_boss_hp_percentage
+        # else:
+        #     previous_boss_hp_percentage = boss_hp_percentage
 
         # Store the player HP for graphing after the loop ends
         player_hp_history.append(full_hp_percentage * 100)  # Store as percentage
@@ -130,9 +130,7 @@ def in_game_status():
         #print(f"player HP percentage: {full_hp_percentage * 100:.2f}%")
         print(f"boss HP percentage: {boss_hp_percentage * 100:.2f}%")
 
-        if (boss_hp_percentage < 0.01 or full_hp_percentage <
-
-                0.01): #本局游戏结束
+        if (boss_hp_percentage < 0.01 or full_hp_percentage < 0.01): #本局游戏结束
             break
 
         # Wait for 0.5 seconds before capturing the next frame
