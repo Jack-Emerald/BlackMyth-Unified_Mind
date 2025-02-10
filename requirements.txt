@@ -1,0 +1,9 @@
+gym==0.26.2
+mss==10.0.0
+numpy==2.2.2
+pytesseract==0.3.13
+stable-baselines3==2.5.0
+pydirectinput==1.0.4
+opencv-python==4.11.0.86
+matplotlib==3.10.0
+shimmy==2.0.0
