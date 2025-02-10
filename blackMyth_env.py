@@ -163,7 +163,7 @@ class EldenEnv(gym.Env):
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
-        elif action == 11 and (time.time() - self.time_since_heal) > 5:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 11 and (time.time() - self.time_since_heal) > 1.5:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
