@@ -4,6 +4,7 @@ Reinforcement learning designed for black myth wukong
 
 
 待解决：
+ai发现攻击到来时选择喝血而不是躲避收益更大（？），但实际情况是血瓶数量有限，不应该挥霍。
 目前模型对喝血瓶间隔有5秒限制，可以考虑解除。
 
 已解决

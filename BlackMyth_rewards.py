@@ -203,14 +203,16 @@ class EldenReward:
         if not self.death:
             hp_change = self.curr_hp - self.prev_hp
             if hp_change > 0.02:  # Reward if we healed)
-
-                if self.prev_hp > 0.7 and hp_change > 0.2:
+                reward_rate = 1
+                if self.prev_hp > 0.7 and hp_change > 0.1:
+                    reward_rate = 0.5
                     hp_reward -= 100
                     print("negative heal")
                 elif self.prev_hp < 0.5:
+                    reward_rate = 1.5
                     hp_reward += 100
                     print("positive heal")
-                hp_reward = 200*hp_change
+                hp_reward = 200*hp_change*reward_rate
             elif hp_change < self.image_detection_tolerance:  # Negative reward if we took damage
                 hp_reward = -250*hp_change
                 self.time_since_dmg_taken = time.time()
