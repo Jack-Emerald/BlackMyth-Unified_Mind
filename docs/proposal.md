@@ -8,7 +8,7 @@ title: Proposal
 ## Summary of the Project
 Our goal is to create an AI agent that can defeat the bosses in a video game called Black Myth: Wukong, which is a Chinese Action RPG. 
 
-Currently, we consider the input for our AI is the screen capturing during the game, including then boss and player HP bars, and the output should be a model that is able to take actions to beat the bosses based on the in game screen capturings.
+Currently, we consider the input for our AI is the screen capturing during the game, including then boss and player HP bars, and the output should be a model that is able to take actions to beat the bosses based on the in game screen capturing.
 
 The application of this project includes making reliable AI agent that may help the user to choose the best strategy for defeating the boss in an Action RPG.
 
@@ -26,7 +26,7 @@ Black Myth: Wukong is an Action RPG. During the game, the player will encounter 
 
 Since beating the boss is the ultimate goal, the higher percent of tries the agent kills the boss, the better it performs. We expect our AI can only choose random actions at the beginning of project. However, as it improves from reinforcement learning, it should learn how to defeat the boss with optimal poll of actions. Our moonshot case can be how to train a common model that fits for challenging most or even all bosses in the game.
 
-To test whether there is an overfit situation, we may train our model by using different equipment, combinations of spells, and so on. Meanwhile, we will try to train a common model in the end to see whether we can achieve the moonshot case. At first, the equipments provided to the AI agent will be in high level, but the difficulty(low-level equipments, etc.) will gradually increase, so that we can see the overall performance of our AI.
+To test whether there is an overfit situation, we may train our model by using different equipments, combinations of spells, and so on. Meanwhile, we will try to train a common model in the end to see whether we can achieve the moonshot case. At first, the equipments provided to the AI agent will be in high level, but the difficulty(low-level equipments, etc.) will gradually increase, so that we can see the overall performance of our AI.
 
 <hr>
 
