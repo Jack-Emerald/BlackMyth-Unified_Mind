@@ -37,10 +37,3 @@ body > .container {
 code {
   font-size: 80%;
 }
-
-hr {
-  border: none; /* Remove default styling */
-  height: 2px; /* Adjust thickness */
-  background-color: #ccc; /* Light gray for visibility */
-  margin: 20px 0; /* Space above and below */
-}
