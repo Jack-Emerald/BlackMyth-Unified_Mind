@@ -4,26 +4,27 @@ title: Proposal
 ---
 
 ## Summary of the Project
-Our goal is to create a AI that can earn high score in a game called Aimlabs, which is a fps training game. 
+Our goal is to create an AI agent that can defeat the bosses in a video game called Black Myth: Wukong, which is a Chinese Action RPG. 
 
-Currently, we consider the input for our AI is the screen capturing during the game, and the output should be a model that is able to take actions to earn scores based on the in game screen capturings.
+Currently, we consider the input for our AI is the screen capturing during the game, including then boss and player HP bars, and the output should be a model that is able to take actions to beat the bosses based on the in game screen capturings.
 
-The application of this project includes making reliable AI teammates or more challenging opponents in fps games, and real-time self-tracking device that is able to efficiently locate specific objects on the screen. For instance, drones that can locate fire automatically captured by its camera.
+The application of this project includes making reliable AI agent that may help the user to choose the best strategy for defeating the boss in an Action RPG.
 
 ## AI/ML Algorithms
-We are going to use reinforcement learning with Proximal Policy Optimization or Advantage Actor-Crtic together with screen capture and keyboard/mouse control to complete this project.
+We are going to use reinforcement learning with Proximal Policy Optimization together with screen capture and keyboard/mouse control to complete this project.
 
 ## Evaluation Plan
-Aimlabs is a fps training game. During the game, multiple objects will appears on different position, player need to move their mouse onto the object and click on them to shoot the object and earn scores. As a successful AI, it should be able to quickly move the mouse to the objects and click on them. We hope the successful AI could reach 100k score.
+Black Myth: Wukong is an Action RPG. During the game, the player will encounter different bosses with different ways of attacking, and in Challenge mode, the player has the chance to challenge a chosen boss repeatedly. As a successful AI, it should be able to decide the best action to make in order to avoid taking too much damage which will lead to death and to defeat the boss ultimately.
 
-Since scores are all what AI care about, the higher score AI can earn, the better it performs. We expect our AI can only move randomly at the beginning of project. However, as it improves from reinforcement learning, it should learns to move mouse toward the objects as quickly as possible then click on them, that will allows it to earn the highest score. This is out moonshot case.
+Since beating the boss is the ultimate goal, the higher percent of tries the agent kills the boss, the better it performs. We expect our AI can only choose random actions at the beginning of project. However, as it improves from reinforcement learning, it should learn how to defeat the boss with optimal poll of actions. Our moonshot case can be how to train a common model that fits for challenging most or even all bosses in the game.
 
-To test whether there is a overfit situation, we may train our module using several background, but testing it using different environment. At first, the test cases will be easy, but the difficuly will gradually increase, so that we can see the overall performance of our AI.
+To test whether there is an overfit situation, we may train our model by using different equipment, combinations of spells, and so on. Meanwhile, we will try to train a common model in the end to see whether we can achieve the moonshot case. At first, the equipments provided to the AI agent will be in high level, but the difficulty(low-level equipments, etc.) will gradually increase, so that we can see the overall performance of our AI.
 
 ## Meet the Instructor
-Date: 2025/1/20 10:15am
+1st: 2025/1/20 10:15am PST
+2nd: 2025/2/10 10:30am PST
 
 ## AI Tool Usage
 We are going to use ***chatgpt*** for debugging our code or optimize the speed of our code if possible.
 
-We plan to use ***Gymnasium***, an API standard for reinforcement learning, as a basic API to connect our Aimlabs game. Meanwhile, Aimlabs has its own API we can use to extract the data for analysis purpose. Some online API tools are available for this game, too.
+We plan to use ***Gymnasium***, an API standard for reinforcement learning, as a basic RL API to connect the game. However, since we cannot directly connect to the game to extract data directly, usage of screen-capturing and mouse-controlling is inevitable.
