@@ -10,8 +10,12 @@ Currently, we consider the input for our AI is the screen capturing during the g
 
 The application of this project includes making reliable AI agent that may help the user to choose the best strategy for defeating the boss in an Action RPG.
 
+---
+
 ## AI/ML Algorithms
 We are going to use reinforcement learning with Proximal Policy Optimization together with screen capture and keyboard/mouse control to complete this project.
+
+---
 
 ## Evaluation Plan
 Black Myth: Wukong is an Action RPG. During the game, the player will encounter different bosses with different ways of attacking, and in Challenge mode, the player has the chance to challenge a chosen boss repeatedly. As a successful AI, it should be able to decide the best action to make in order to avoid taking too much damage which will lead to death and to defeat the boss ultimately.
@@ -20,9 +24,13 @@ Since beating the boss is the ultimate goal, the higher percent of tries the age
 
 To test whether there is an overfit situation, we may train our model by using different equipment, combinations of spells, and so on. Meanwhile, we will try to train a common model in the end to see whether we can achieve the moonshot case. At first, the equipments provided to the AI agent will be in high level, but the difficulty(low-level equipments, etc.) will gradually increase, so that we can see the overall performance of our AI.
 
+---
+
 ## Meet the Instructor
 1st: 2025/1/20 10:15am PST
 2nd: 2025/2/10 10:30am PST
+
+---
 
 ## AI Tool Usage
 We are going to use ***chatgpt*** for debugging our code or optimize the speed of our code if possible.
