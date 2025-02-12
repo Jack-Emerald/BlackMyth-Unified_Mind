@@ -28,6 +28,7 @@ To test whether there is an overfit situation, we may train our model by using d
 
 ## Meet the Instructor
 1st: 2025/1/20 10:15am PST
+
 2nd: 2025/2/10 10:30am PST
 
 <hr>
