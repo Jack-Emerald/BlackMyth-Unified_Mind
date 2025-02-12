@@ -18,6 +18,7 @@ title:  Home
 <hr>
 
 **Description:**
+
 Black Myth: Wukong is a Chinese Action RPG released 
 in 2024.8.20. In this project, we are trying to train an AI 
 agent to completely defeat bosses in Challenge mode by itself.

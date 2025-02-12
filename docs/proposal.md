@@ -3,6 +3,8 @@ layout: default
 title: Proposal
 ---
 
+<img src="images/shigandang.jpg" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:right; margin-left:20px; border-radius:10px; box-shadow:5px 5px 10px gray;">
+
 ## Summary of the Project
 Our goal is to create an AI agent that can defeat the bosses in a video game called Black Myth: Wukong, which is a Chinese Action RPG. 
 
@@ -18,6 +20,8 @@ We are going to use reinforcement learning with Proximal Policy Optimization tog
 <hr>
 
 ## Evaluation Plan
+<img src="images/challengeMode.jpg" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:left; border-radius:10px; margin-right: 20px; box-shadow:5px 5px 10px gray;">
+
 Black Myth: Wukong is an Action RPG. During the game, the player will encounter different bosses with different ways of attacking, and in Challenge mode, the player has the chance to challenge a chosen boss repeatedly. As a successful AI, it should be able to decide the best action to make in order to avoid taking too much damage which will lead to death and to defeat the boss ultimately.
 
 Since beating the boss is the ultimate goal, the higher percent of tries the agent kills the boss, the better it performs. We expect our AI can only choose random actions at the beginning of project. However, as it improves from reinforcement learning, it should learn how to defeat the boss with optimal poll of actions. Our moonshot case can be how to train a common model that fits for challenging most or even all bosses in the game.
