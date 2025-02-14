@@ -31,14 +31,12 @@ class EldenReward:
     def get_current_hp(self, frame):
         #x, y, w, h = 201, 980, 325, 8
         hp_image = frame[980:980 + 8, 201:201 + 325]  # Cut out the hp bar from the frame
-        if self.DEBUG_MODE: self.render_frame(hp_image)
 
         lower = np.array([0, 0, 100])  # Lower bound for white color
         upper = np.array([180, 160, 230])  # Upper bound for white color
 
         hsv = cv2.cvtColor(hp_image, cv2.COLOR_RGB2HSV)  # Apply the filter
         mask = cv2.inRange(hsv, lower, upper)  # Also apply
-        if self.DEBUG_MODE: self.render_frame(mask)
 
         matches = np.argwhere(mask == 255)  # Number for all the white pixels in the mask
         curr_hp = len(matches) / (hp_image.shape[1] * hp_image.shape[
@@ -95,14 +93,12 @@ class EldenReward:
             boss_hp_image = frame[913:921, 675:1245]  # cutting frame for boss hp bar (always same size)
         elif self.GAME_MODE == "PVe":
             boss_hp_image = frame[913:921, 757:1152]  # cutting frame for boss hp bar (always same size)
-        if self.DEBUG_MODE: self.render_frame(boss_hp_image)
 
         lower = np.array([0, 0, 175])  # Lower bound for white color
         upper = np.array([180, 30, 255])  # Upper bound for white color
 
         hsv = cv2.cvtColor(boss_hp_image, cv2.COLOR_RGB2HSV)  # Apply the filter
         mask = cv2.inRange(hsv, lower, upper)
-        if self.DEBUG_MODE: self.render_frame(mask)
 
         # self.render_frame(boss_hp_image)
         # self.render_frame(mask)
@@ -112,7 +108,6 @@ class EldenReward:
             0])  # Calculating percent of white pixels in the mask (current boss hp in percent)
 
         # same noise problem but the boss hp bar is larger so noise is less of a problem
-
         if self.DEBUG_MODE: print('👹 Boss HP: ', boss_hp)
 
         return boss_hp

@@ -22,7 +22,7 @@ def train(CREATE_NEW_MODEL, config):
 
 	models_dir = f"models/{model_name}/"
 	logdir = f"logs/{model_name}/"
-	model_path = f"{models_dir}/{model_name}"
+	model_path = f"{models_dir}/PPO-1"
 	print("🧠 Folder structure created...")
 
 

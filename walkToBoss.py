@@ -20,7 +20,7 @@ class walkToBoss:
             print("we fight shigandang")
             self.boss1()
         elif self.BOSS == 2:
-            print("boss1")
+            print("boss2")
             self.boss1()
 
         # '''PVP'''

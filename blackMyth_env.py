@@ -101,8 +101,6 @@ class EldenEnv(gym.Env):
         sct_img = self.sct.grab(monitor)
         frame = cv2.cvtColor(np.asarray(sct_img), cv2.COLOR_BGRA2RGB)
         frame = frame[46:IMG_HEIGHT + 46, 12:IMG_WIDTH + 12]  # cut the frame to the size of the game
-        if self.DEBUG_MODE:
-            self.render_frame(frame)
         return frame
 
     '''Rendering the frame for debugging'''
@@ -158,7 +156,7 @@ class EldenEnv(gym.Env):
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
-        elif action == 11 and (time.time() - self.time_since_heal) > 2:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 11 and (time.time() - self.time_since_heal) > 4:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
@@ -216,7 +214,6 @@ class EldenEnv(gym.Env):
             if player_win or boss_win:
                 break
             # cv2.rectangle(frame, (120, 150), (120 + 130, 150 + 50), (0, 255, 0), 2)  # Drawing rectangle on the frame
-
             # Debugging output if enabled
             if self.DEBUG_MODE:
                 matches = np.argwhere(mask1 == 255)
@@ -270,8 +267,10 @@ class EldenEnv(gym.Env):
 
 
         if player_win:
+            print("add player win reward")
             self.reward += 2000
         elif boss_win:
+            print("minus player dead reward")
             self.reward -= 2000
 
         if self.DEBUG_MODE:
