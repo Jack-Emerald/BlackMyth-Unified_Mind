@@ -91,7 +91,10 @@ class EldenReward:
     '''Detecting the current boss hp'''
 
     def get_boss_hp(self, frame):
-        boss_hp_image = frame[913:921, 675:1245]  # cutting frame for boss hp bar (always same size)
+        if self.GAME_MODE == "PVE":
+            boss_hp_image = frame[913:921, 675:1245]  # cutting frame for boss hp bar (always same size)
+        elif self.GAME_MODE == "PVe":
+            boss_hp_image = frame[913:921, 757:1152]  # cutting frame for boss hp bar (always same size)
         if self.DEBUG_MODE: self.render_frame(boss_hp_image)
 
         lower = np.array([0, 0, 175])  # Lower bound for white color
@@ -160,9 +163,8 @@ class EldenReward:
             self.curr_hp = 0.0
 
         self.boss_death = False
-        if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
-            if self.curr_boss_hp <= 0.005:  # If the boss hp is below 1% the boss is dead (small tolerance because we want to be sure the boss is actually dead)
-                self.boss_death = True
+        if self.curr_boss_hp <= 0.005:  # If the boss hp is below 1% the boss is dead (small tolerance because we want to be sure the boss is actually dead)
+            self.boss_death = True
 
         '''📍2 Hp Rewards'''
         hp_reward = 0
@@ -200,21 +202,21 @@ class EldenReward:
 
 
         '''📍3 Boss Rewards'''
-        if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
-            boss_dmg_reward = 0
-            if self.boss_death:  # Large reward if the boss is dead
-                #boss_dmg_reward = 840
-                pass
-            else:
-                if self.detect_boss_damaged(frame):  # Reward if we damaged the boss (small tolerance because its a large bar)
-                    boss_dmg_reward = 7500*(self.previous_boss_hp - self.curr_boss_hp)
-                    self.time_since_boss_dmg = time.time()
-                if time.time() - self.time_since_boss_dmg > 4:  # Negative reward if we have not damaged the boss for 5 seconds (every step for as long as we dont damage the boss)
-                    boss_dmg_reward = -40
+        boss_dmg_reward = 0
+        if self.boss_death:  # Large reward if the boss is dead
+            # boss_dmg_reward = 840
+            pass
+        else:
+            if self.detect_boss_damaged(
+                    frame):  # Reward if we damaged the boss (small tolerance because its a large bar)
+                boss_dmg_reward = 7500 * (self.previous_boss_hp - self.curr_boss_hp)
+                self.time_since_boss_dmg = time.time()
+            if time.time() - self.time_since_boss_dmg > 4:  # Negative reward if we have not damaged the boss for 5 seconds (every step for as long as we dont damage the boss)
+                boss_dmg_reward = -40
 
-            percent_through_fight_reward = 0
-            if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
-                percent_through_fight_reward = (1 - self.curr_boss_hp) * 20
+        percent_through_fight_reward = 0
+        if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
+            percent_through_fight_reward = (1 - self.curr_boss_hp) * 20
 
         # '''📍4 charge rewards'''
         charge_reward = 0
@@ -223,11 +225,7 @@ class EldenReward:
         #     charge_reward = 100*charge_change
 
         '''📍5 Total Reward / Return'''
-        if self.GAME_MODE == "PVE":  # Only if we are in PVE mode
-            total_reward = hp_reward + boss_dmg_reward + charge_reward + time_since_taken_dmg_reward + percent_through_fight_reward
-        else:
-            total_reward = hp_reward + time_since_taken_dmg_reward + pvp_reward
-
+        total_reward = hp_reward + boss_dmg_reward + charge_reward + time_since_taken_dmg_reward + percent_through_fight_reward
         total_reward = round(total_reward, 3)
 
         return total_reward, self.death, self.boss_death, self.game_won
@@ -240,7 +238,7 @@ if __name__ == "__main__":
         "MONITOR": 1,  # Set the monitor to use (1,2,3)
         "DEBUG_MODE": False,  # Renders the AI vision (pretty scuffed)
         "GAME_MODE": "PVE",  # PVP or PVE
-        "BOSS": 8,  # 1-6 for PVE (look at walkToBoss.py for boss names) | Is ignored for GAME_MODE PVP
+        "BOSS": 1,  # 1-6 for PVE (look at walkToBoss.py for boss names) | Is ignored for GAME_MODE PVP
         "DESIRED_FPS": 24
         # Set the desired fps (used for actions per second) (24 = 2.4 actions per second) #not implemented yet       #My CPU (i9-13900k) can run the training at about 2.4SPS (steps per secons)
     }

@@ -10,16 +10,19 @@ def train(CREATE_NEW_MODEL, config):
 	TIMESTEPS = 1			#Learning rate multiplier.
 	HORIZON_WINDOW = 2000	#Lerning rate number of steps before updating the model. ~6min
 
+	# Dynamically set model_name based on the boss number
+	boss_number = config["BOSS"]  # Default to 1 if BOSS key is not present
+	model_name = f"PPO-{boss_number}"
 
 	'''Creating folder structure'''
-	model_name = "PPO-1"
 	if not os.path.exists(f"models/{model_name}/"):
 		os.makedirs(f"models/{model_name}/")
 	if not os.path.exists(f"logs/{model_name}/"):
 		os.makedirs(f"logs/{model_name}/")
+
 	models_dir = f"models/{model_name}/"
 	logdir = f"logs/{model_name}/"
-	model_path = f"{models_dir}/PPO-1"
+	model_path = f"{models_dir}/{model_name}"
 	print("🧠 Folder structure created...")
 
 

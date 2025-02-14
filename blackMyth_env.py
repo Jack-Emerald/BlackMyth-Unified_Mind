@@ -81,12 +81,8 @@ class EldenEnv(gym.Env):
         self.GAME_MODE = config["GAME_MODE"]  # If we are in PVP or PVE mode
         self.DESIRED_FPS = config["DESIRED_FPS"]  # Desired FPS (not implemented yet)
         self.are_in_second_phase = False  # If we are in the second phase of the boss
-        if self.GAME_MODE == "PVE":
-            self.walk_to_boss = walkToBoss(1)  # Class to walk to the boss
-        else:
-            self.matchmaking = walkToBoss(99)  # Matchmaking class for PVP mode
-            self.duel_lockon = walkToBoss(100)  # Lock on class to the player in PVP mode
-            self.first_reset = True
+        self.walk_to_boss = walkToBoss(config["BOSS"])  # Class to walk to the boss
+
 
     '''One hot encoding of the last 10 actions'''
 
@@ -375,9 +371,9 @@ class EldenEnv(gym.Env):
 
 
         '''📍 4. Walking to the boss'''  # ⚔️we already did this in 📍 3. for PVP
-        if self.GAME_MODE == "PVE":
-            print("🔄👹 walking to boss")
-            self.walk_to_boss.perform()  # This is hard coded in walkToBoss.py
+
+        print("🔄👹 walking to boss")
+        self.walk_to_boss.perform()  # This is hard coded in walkToBoss.py
 
         if self.death:  # Death counter in txt file
             f = open("deathCounter.txt", "r")

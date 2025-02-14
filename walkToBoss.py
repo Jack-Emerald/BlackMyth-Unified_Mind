@@ -17,29 +17,11 @@ class walkToBoss:
     def perform(self):
         '''PVE'''
         if self.BOSS == 1:
-            print("we fight Tiger Vanguard")
+            print("we fight shigandang")
             self.boss1()
         elif self.BOSS == 2:
             print("boss1")
-            self.boss2()
-        elif self.BOSS == 3:
-            print("boss1")
-            self.boss3()
-        elif self.BOSS == 4:
-            print("boss1")
-            self.boss4()
-        elif self.BOSS == 5:
-            print("boss1")
-            self.boss5()
-        elif self.BOSS == 6:
-            print("boss1")
-            self.boss6()
-        elif self.BOSS == 7:
-            print("boss1")
-            self.boss7()
-        elif self.BOSS == 8:
-            print("boss1")
-            self.boss8()
+            self.boss1()
 
         # '''PVP'''
         elif self.BOSS == 99:
