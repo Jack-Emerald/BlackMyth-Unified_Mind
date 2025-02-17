@@ -3,6 +3,9 @@ layout: default
 title: Proposal
 ---
 
+<iframe width="560" height="315" src="https://youtu.be/QfKq2T2C9PI" frameborder="0" allowfullscreen></iframe>
+
+
 ## Project Summary
 Our goal is to create an AI agent that can defeat the bosses in a video game called Black Myth: Wukong, which is a Chinese Action RPG. 
 
