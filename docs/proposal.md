@@ -40,4 +40,4 @@ To test whether there is an overfit situation, we may train our model by using d
 ## AI Tool Usage
 We are going to use ***chatgpt*** for debugging our code or optimize the speed of our code if possible.
 
-We plan to use ***Gymnasium***, an API standard for reinforcement learning, as a basic RL API to connect the game. However, since we cannot directly connect to the game to extract data directly, usage of screen-capturing and mouse-controlling is inevitable.
+We plan to use ***gym***, an API standard for reinforcement learning, as a basic RL API to connect the game. However, since we cannot directly connect to the game to extract data directly, usage of screen-capturing and mouse-controlling is inevitable.
