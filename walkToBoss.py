@@ -22,6 +22,9 @@ class walkToBoss:
         elif self.BOSS == 2:
             print("boss2")
             self.boss1()
+        elif self.BOSS == 3:
+            print("test boss")
+            self.boss1()
 
         # '''PVP'''
         elif self.BOSS == 99:

@@ -36,8 +36,8 @@ mark_position(201,983,325, 8)
 #elite hp bar
 mark_position(757,913,395, 8)
 
-mark_position(700,918,1, 1)
-mark_position(770,918,1, 1)
+#mark_position(700,918,1, 1)
+#mark_position(770,918,1, 1)
 
 #change points 3,2,1
 mark_position(1815,997,1, 1)
@@ -48,15 +48,17 @@ mark_position(1782,1040,1, 1)
 mark_position(211, 985,1, 1)
 
 #vanquished word(boss dead)
-mark_position(310,150,250, 50)
+#mark_position(310,150,250, 50)
 
 #return word(player dead)
-mark_position(120,150,130, 50)
+#mark_position(120,150,130, 50)
 
 mark_position(950,450,1, 1)
 
 # Show the result
 cv2.imshow('Matched Result', game_frame)
+# Save the result
+cv2.imwrite('../docs/images/hp_bars.jpg', game_frame)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
