@@ -1,21 +1,16 @@
 # BlackMyth_RL
-Reinforcement learning designed for black myth wukong
+Reinforcement learning designed for Black Myth: Wukong
 
+Black Myth: Wukong is a Chinese Action RPG released in 2024.8.20. 
+In this project, we are trying to train an AI agent to completely defeat bosses in Challenge mode by itself. 
+The AI agent should be able to beat the bosses by choosing series of best actions from our provided action poll. 
+We can promise this is one of the coolest projects we have ever decided to make.
 
-
-待解决：
-ai发现攻击到来时选择喝血而不是躲避收益更大（？），但实际情况是血瓶数量有限，不应该挥霍。
-目前模型对喝血瓶间隔有5秒限制，可以考虑解除。
-
-已解决
-手柄使用技能会导致模糊，以至于血条无法识别。--> 键盘操作
-角色被击中的瞬间血条会变暗，导致识别错误，需要再定义颜色区间。--> 增大识别区间
-击败boss或角色死亡都会导致双方血条无法识别，无法根据此决定输赢。--> 确定结算后根据不同文字界面确认胜负
-文字识别还有问题 --> 已解决
-光照会导致boss已经失去的血条的部分被误识别，最好选择战斗场地阴暗的地点。--> 已解决boss hp，角色尚未解决。
-
-ps：
-当角色陷入异常状态时，生命条上会出现特效，导致血条识别波动·。因此需要选择没有毒/雷/火/冰伤害的boss。或者开挂免疫异常状态
-消耗蓄力点，使用血瓶可以恢复生命值。
-boss最低生命检测是1%，因此会出现差一丝血就结算的情况。
-存活奖励不能太高，不然模型的结果会收敛成一个劲远离boss而不是主动攻击。
+NOTE:
+1. Install all the prerequisite packages listed in requirements.txt.
+2. Pytesseract is not just a simple pip install;
+Please also download it from https://tesseract-ocr.github.io/tessdoc/Downloads.html;
+Make sure the "PYTESSERACT_PATH" setting is your path in main.py.
+3. Change env_config in main.py for your customization.
+4. Your models and logs will be stored in separate folders by gym and our code.
+5. You want to make sure the windowed game is on the left corner of your screen. Do not block your game screen.
