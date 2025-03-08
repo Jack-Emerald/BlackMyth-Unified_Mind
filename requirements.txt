@@ -7,3 +7,5 @@ pydirectinput==1.0.4
 opencv-python==4.11.0.86
 matplotlib==3.10.0
 shimmy==2.0.0
+tensorboard==2.18.0
+tensorboard-data-server==0.7.2

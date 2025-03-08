@@ -7,7 +7,7 @@ from gym import spaces
 import pydirectinput
 import pytesseract  # Pytesseract is not just a simple pip install.
 from BlackMyth_rewards import EldenReward
-from walkToBoss import walkToBoss
+from proceedToBoss import proceedToBoss
 
 N_CHANNELS = 3  # Image format
 IMG_WIDTH = 1920  # Game capture resolution
@@ -81,7 +81,7 @@ class EldenEnv(gym.Env):
         self.GAME_MODE = config["GAME_MODE"]  # If we are in PVP or PVE mode
         self.DESIRED_FPS = config["DESIRED_FPS"]  # Desired FPS (not implemented yet)
         self.are_in_second_phase = False  # If we are in the second phase of the boss
-        self.walk_to_boss = walkToBoss(config["BOSS"])  # Class to walk to the boss
+        self.proceed_to_boss = proceedToBoss(config["BOSS"])  # Class to proceed to the boss
 
 
     '''One hot encoding of the last 10 actions'''
@@ -369,10 +369,10 @@ class EldenEnv(gym.Env):
                     file.write(f"{avg_r}\n")
 
 
-        '''📍 4. Walking to the boss'''  # ⚔️we already did this in 📍 3. for PVP
+        '''📍 4. Proceeding to the boss'''  # ⚔️we already did this in 📍 3. for PVP
 
-        print("🔄👹 walking to boss")
-        self.walk_to_boss.perform()  # This is hard coded in walkToBoss.py
+        print("🔄👹 proceeding to boss")
+        self.proceed_to_boss.perform()  # This is hard coded in proceedToBoss.py
 
         if self.death:  # Death counter in txt file
             f = open("deathCounter.txt", "r")
