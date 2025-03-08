@@ -1,14 +1,13 @@
-from stable_baselines3 import PPO, A2C
+from stable_baselines3 import PPO
 import os
-from blackMyth_env import EldenEnv
+from blackMyth_env import BlackMythEnv
 
 
 def train(CREATE_NEW_MODEL, config):
-	print("🧠 Training will start soon. This can take a while to initialize...")
-
+	print("*** Training will begin shortly... Initializing...")
 
 	TIMESTEPS = 1			#Learning rate multiplier.
-	HORIZON_WINDOW = 2000	#Lerning rate number of steps before updating the model. ~6min
+	HORIZON_WINDOW = 2000	#Learning rate number of steps before updating the model. ~6min
 
 	# Dynamically set model_name based on the boss number
 	boss_number = config["BOSS"]  # Default to 1 if BOSS key is not present
@@ -23,12 +22,12 @@ def train(CREATE_NEW_MODEL, config):
 	models_dir = f"models/{model_name}/"
 	logdir = f"logs/{model_name}/"
 	model_path = f"{models_dir}/PPO-1"
-	print("🧠 Folder structure created...")
+	print("*** Folders (models & logs) created...")
 
 
 	'''Initializing environment'''
-	env = EldenEnv(config)
-	print("🧠 EldenEnv initialized...")
+	env = BlackMythEnv(config)
+	print("*** BlackMythEnv initialized...")
 
 
 	'''Creating new model or loading existing model'''
@@ -39,14 +38,14 @@ def train(CREATE_NEW_MODEL, config):
 							n_steps=HORIZON_WINDOW,
 							verbose=1,
 							device='cpu')	#Set training device here.
-		print("🧠 New Model created...")
+		print("*** New Model created...")
 	else:
 		model = PPO.load(model_path, env=env)
-		print("🧠 Model loaded...")
+		print("*** Model loaded...")
 
 
 	'''Training loop'''
 	while True:
 		model.learn(total_timesteps=TIMESTEPS, reset_num_timesteps=False, tb_log_name="PPO", log_interval=1)
 		model.save(f"{models_dir}/PPO-1")
-		print(f"🧠 Model updated...")
+		print(f"*** Model updated...")

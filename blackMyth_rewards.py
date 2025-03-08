@@ -4,11 +4,10 @@ import time
 import pytesseract
 
 
-class EldenReward:
+class BlackMythReward:
     '''Reward Class'''
 
     '''Constructor'''
-
     def __init__(self, config):
         pytesseract.pytesseract.tesseract_cmd = config["PYTESSERACT_PATH"]  # Setting the path to pytesseract.exe
         self.GAME_MODE = config["GAME_MODE"]
@@ -27,7 +26,6 @@ class EldenReward:
         self.image_detection_tolerance = 0.02  # The image detection of the hp bar is not perfect. So we ignore changes smaller than this value. (0.02 = 2%)
 
     '''Detecting the current player hp'''
-
     def get_current_hp(self, frame):
         #x, y, w, h = 201, 980, 325, 8
         hp_image = frame[980:980 + 8, 201:201 + 325]  # Cut out the hp bar from the frame
@@ -47,11 +45,10 @@ class EldenReward:
         if curr_hp >= 0.96:  # If the hp is above 96% we set it to 100% (also color noise fix)
             curr_hp = 1.0
 
-        if self.DEBUG_MODE: print('💊 Health: ', curr_hp)
+        if self.DEBUG_MODE: print('$ Health: ', curr_hp)
         return curr_hp
 
     '''Detecting the current player charge point'''
-
     def get_current_charge(self, frame):
         charge_points = [(1040, 1782), (1020, 1802), (997, 1815)]
 
@@ -83,15 +80,14 @@ class EldenReward:
                     lower_charge[2] <= hsv_pixel[2] <= upper_charge[2]):
                 self.curr_charge += 1
 
-        if self.DEBUG_MODE: print('Number of charged points: ', self.curr_charge)
+        if self.DEBUG_MODE: print('$ Number of charged points: ', self.curr_charge)
         return self.curr_charge
 
     '''Detecting the current boss hp'''
-
     def get_boss_hp(self, frame):
-        if self.GAME_MODE == "PVE":
+        if self.GAME_MODE == "PVE": # boss bar for normal bosses
             boss_hp_image = frame[913:921, 675:1245]  # cutting frame for boss hp bar (always same size)
-        elif self.GAME_MODE == "PVe":
+        elif self.GAME_MODE == "PVe": # boss bar for elite bosses (shorter bars)
             boss_hp_image = frame[913:921, 757:1152]  # cutting frame for boss hp bar (always same size)
 
         lower = np.array([0, 0, 175])  # Lower bound for white color
@@ -109,32 +105,28 @@ class EldenReward:
 
         return boss_hp
 
-    '''Detecting if the boss is damaged in PvE'''  # 🚧 This is not implemented yet!!
-
+    '''Detecting if the boss is damaged'''
     def detect_boss_damaged(self, frame):
-
         if (self.previous_boss_hp - self.curr_boss_hp) > 0.01:  # if there are more than 1 percent pixels change, return true
             return True
         else:
             return False
 
     '''Debug function to render the frame'''
-
     def render_frame(self, frame):
         cv2.imshow('debug-render', frame)
         cv2.waitKey(1000)
         cv2.destroyAllWindows()
 
     '''Update function that gets called every step and returns the total reward and if the agent died or the boss died'''
-
     def update(self, frame, first_step):
-        # 📍 1 Getting current values
-        # 📍 2 Hp Rewards
-        # 📍 3 Boss Rewards
-        # 📍 4 PvP Rewards
-        # 📍 5 Total Reward / Return
+        """ 1. Getting current values
+            2. Hp Rewards
+            3. Boss Rewards
+            4. Charge rewards (Not Activated)
+            5. Total Reward / Return"""
 
-        '''📍1 Getting/Setting current values'''
+        '''1. Getting/Setting current values'''
         self.curr_hp = self.get_current_hp(frame)
 
         self.previous_charge = self.curr_charge
@@ -148,7 +140,7 @@ class EldenReward:
             self.curr_boss_hp = self.previous_boss_hp
 
         # we have eliminated the influences ahead.
-        if self.DEBUG_MODE: print('👹 Boss HP: ', self.curr_boss_hp)
+        if self.DEBUG_MODE: print('$ Boss HP: ', self.curr_boss_hp)
 
         if first_step: self.time_since_dmg_taken = time.time() - 10  # Setting the time_since_dmg_taken to 10 seconds ago so we dont get a negative reward at the start of the game
 
@@ -161,7 +153,7 @@ class EldenReward:
         if self.curr_boss_hp <= 0.005:  # If the boss hp is below 1% the boss is dead (small tolerance because we want to be sure the boss is actually dead)
             self.boss_death = True
 
-        '''📍2 Hp Rewards'''
+        '''2. Hp Rewards'''
         hp_reward = 0
         if not self.death:
             hp_change = self.curr_hp - self.prev_hp
@@ -170,11 +162,11 @@ class EldenReward:
                 if self.prev_hp > 0.7 and hp_change > 0.1:
                     reward_rate = 0.5
                     hp_reward -= 100
-                    print("negative heal")
+                    print("$ Negative heal")
                 elif self.prev_hp < 0.5:
                     reward_rate = 1.5
                     hp_reward += 100
-                    print("positive heal")
+                    print("$ Positive heal")
                 hp_reward = 200*hp_change*reward_rate
             elif hp_change < self.image_detection_tolerance:  # Negative reward if we took damage
                 hp_reward = -250*hp_change
@@ -194,9 +186,7 @@ class EldenReward:
 
         self.prev_hp = self.curr_hp  # Update prev_hp to curr_hp
 
-
-
-        '''📍3 Boss Rewards'''
+        '''3. Boss Rewards'''
         boss_dmg_reward = 0
         if self.boss_death:  # Large reward if the boss is dead
             # boss_dmg_reward = 840
@@ -213,13 +203,13 @@ class EldenReward:
         if self.curr_boss_hp < 0.97:  # Increasing reward for every step we are alive depending on how low the boss hp is
             percent_through_fight_reward = (1 - self.curr_boss_hp) * 20
 
-        # '''📍4 charge rewards'''
+        '''4. Charge rewards (Not Activated)'''
         charge_reward = 0
         # charge_change = self.previous_charge - self.curr_charge
         # if charge_change > 0: # reward if we use charge points
         #     charge_reward = 100*charge_change
 
-        '''📍5 Total Reward / Return'''
+        '''5. Total Reward/Return'''
         total_reward = hp_reward + boss_dmg_reward + charge_reward + time_since_taken_dmg_reward + percent_through_fight_reward
         total_reward = round(total_reward, 3)
 
@@ -237,7 +227,7 @@ if __name__ == "__main__":
         "DESIRED_FPS": 24
         # Set the desired fps (used for actions per second) (24 = 2.4 actions per second) #not implemented yet       #My CPU (i9-13900k) can run the training at about 2.4SPS (steps per secons)
     }
-    reward = EldenReward(env_config)
+    reward = BlackMythReward(env_config)
 
     IMG_WIDTH = 1920  # Game capture resolution
     IMG_HEIGHT = 1080
@@ -253,4 +243,3 @@ if __name__ == "__main__":
     reward.update(frame, True)
     time.sleep(1)
     reward.update(frame, False)
-
