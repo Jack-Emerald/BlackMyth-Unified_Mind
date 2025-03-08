@@ -107,9 +107,6 @@ class EldenReward:
         boss_hp = len(matches) / (boss_hp_image.shape[1] * boss_hp_image.shape[
             0])  # Calculating percent of white pixels in the mask (current boss hp in percent)
 
-        # same noise problem but the boss hp bar is larger so noise is less of a problem
-        if self.DEBUG_MODE: print('👹 Boss HP: ', boss_hp)
-
         return boss_hp
 
     '''Detecting if the boss is damaged in PvE'''  # 🚧 This is not implemented yet!!
@@ -149,6 +146,9 @@ class EldenReward:
         #eliminate light influence
         if self.curr_boss_hp>self.previous_boss_hp:
             self.curr_boss_hp = self.previous_boss_hp
+
+        # we have eliminated the influences ahead.
+        if self.DEBUG_MODE: print('👹 Boss HP: ', self.curr_boss_hp)
 
         if first_step: self.time_since_dmg_taken = time.time() - 10  # Setting the time_since_dmg_taken to 10 seconds ago so we dont get a negative reward at the start of the game
 
