@@ -58,7 +58,7 @@ class proceedToBoss:
                 break
 
             print(".", end="")
-            time.sleep(1) # Sleep for a while for the next loop
+            time.sleep(0.2) # Sleep for a while for the next loop
 
     '''Configuration 1: challenge mode bosses'''
     def boss1(self):
