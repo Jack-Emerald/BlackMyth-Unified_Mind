@@ -157,24 +157,10 @@ class BlackMythEnv(gym.Env):
             pydirectinput.press('3')
             self.time_since_spell3 = time.time()
             self.action_name = 'spell3'
-        elif action == 11 and (time.time() - self.time_since_heal) > 4:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
+        elif action == 11 and (time.time() - self.time_since_heal) > 2:  # prevent spamming heal we only allow it to be pressed every 1.5 seconds
             pydirectinput.press('r')  # item
             self.time_since_heal = time.time()
             self.action_name = 'heal'
-        elif action == 99:
-            pydirectinput.press('esc')
-            time.sleep(0.5)
-            pydirectinput.press('right')
-            time.sleep(0.4)
-            pydirectinput.press('right')
-            time.sleep(0.4)
-            pydirectinput.press('e')
-            time.sleep(1.5)
-            pydirectinput.press('left')
-            time.sleep(0.5)
-            pydirectinput.press('e')
-            time.sleep(0.5)
-            print('🔄🔥')
 
     def check_for_conclusion_screen(self):
         """Wait until a winner (either the boss or the player) is clear"""

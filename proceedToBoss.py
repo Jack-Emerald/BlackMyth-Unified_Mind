@@ -16,8 +16,11 @@ class proceedToBoss:
         """Performing the actions need to be taken before fight the bosses;
         currently only one configuration: challenge mode bosses (1)"""
         if self.BOSS == 1: # Challenge mode bosses
-            print("Fight BOSS with challenge mode")
-            self.boss1()
+            print("Fight Shigandang with challenge mode")
+            self.boss()
+        elif self.BOSS == 2: # Challenge mode bosses
+            print("Fight Yellow Loong with challenge mode")
+            self.boss()
         else:
             print("ProceedToBoss Configuration Not Found")
 
@@ -61,7 +64,7 @@ class proceedToBoss:
             time.sleep(0.2) # Sleep for a while for the next loop
 
     '''Configuration 1: challenge mode bosses'''
-    def boss1(self):
+    def boss(self):
         #self.put_on_lantern()
         time.sleep(3)
         print("Begin to challenge the boss...")
