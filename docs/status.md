@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Proposal
+title: Status
 ---
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/QfKq2T2C9PI" frameborder="0" allowfullscreen></iframe>
