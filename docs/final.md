@@ -3,7 +3,7 @@ layout: default
 title: Final Report
 ---
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/QfKq2T2C9PI" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=YnIWhCEB3hk" frameborder="0" allowfullscreen></iframe>
 
 <hr>
 
@@ -73,6 +73,8 @@ SPECIAL THANKS to EldenRL repository, for providing us the inspiration to make t
 SPECIAL THANKS to OpenAI Gym package, for providing us a simple way to train our AI agent; link: https://github.com/openai/gym
 
 SPECIAL THANKS to Black Myth: Wukong, for providing us this excellent RPG with vivid images displayed in our website; link: https://www.heishenhua.com/
+
+<hr>
 
 ## AI Tool Usage
 We utilized OpenAI ***chatgpt*** for debugging our code and optimize the speed of our code.
