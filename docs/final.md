@@ -3,7 +3,7 @@ layout: default
 title: Final Report
 ---
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=YnIWhCEB3hk" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YnIWhCEB3hk" frameborder="0" allowfullscreen></iframe>
 
 <hr>
 
