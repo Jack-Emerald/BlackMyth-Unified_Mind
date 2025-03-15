@@ -22,7 +22,7 @@ class proceedToBoss:
             print("Fight Yellow Loong with challenge mode")
             self.boss()
         elif self.BOSS == 3: # Challenge mode bosses
-            print("Fight Yin Tiger with challenge mode")
+            print("Fight Chiranlong with challenge mode")
             self.boss()
         else:
             print("ProceedToBoss Configuration Not Found")
