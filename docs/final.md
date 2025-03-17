@@ -57,7 +57,7 @@ In this project, we used mss for screenshot; gym and stable-baselines3 for train
 ## Evaluation
 The goal of this project is simple and straightforward - defeat the boss. Based on our reward settings, the AI agent will earn rewards for any action that helps it to defeat the boss and remain alive. As a result, the higher the final reward is, the better our model performs.
 
-<img src="images/yellow_loong.png" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:left; border-radius:10px; margin-right: 20px; margin-bottom:20px; box-shadow:5px 5px 10px gray;">
+<img src="images/yellow_loong.jpg" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:right; border-radius:10px; margin-right: 20px; margin-bottom:20px; box-shadow:5px 5px 10px gray;">
 
 The plots of ep_len_mean and ep_rew_mean show how our model performs over the course of training. ep_len_mean represents the average length of the episodes (measured in time steps, with each episode being 2000 steps), while ep_rew_mean tracks the average reward the agent receives per episode, reflecting its performance based on the reward structure we’ve defined.
 
