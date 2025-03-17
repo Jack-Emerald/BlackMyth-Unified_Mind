@@ -30,7 +30,7 @@ We discussed it thoroughly, and finally came up an optimized version of our proj
 
 The final AI agent utilizes Proximal Policy Optimization (PPO), a policy gradient method designed to improve stability and convergence during training by OpenAI. PPO is particularly effective in environments with large action spaces and high-dimensional inputs.
 
-<img src="images/hp_bars.jpg" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:left; border-radius:10px; margin-right: 20px; margin-bottom:20px; box-shadow:5px 5px 10px gray;">
+<img src="images/hp_bars.jpg" alt="Description" style="max-width:60%; height:auto; max-height:200px; display:block; float:right; border-radius:10px; margin-right: 20px; margin-bottom:20px; box-shadow:5px 5px 10px gray;">
 
 During the game, the AI agent controls a character and takes actions based on the game scenario. To set up the environment, we extract the character's and boss's health bars, process the real time screenshot into a numpy matrix, and include the last 10 actions taken. Compare to baseline approach, the stamina is abandoned because of its unnecessary nature. These form the observation space, which represents the environment.
 
@@ -61,9 +61,7 @@ The goal of this project is simple and straightforward - defeat the boss. Based 
 
 The plots of ep_len_mean and ep_rew_mean show how our model performs over the course of training. ep_len_mean represents the average length of the episodes (measured in time steps, with each episode being 2000 steps), while ep_rew_mean tracks the average reward the agent receives per episode, reflecting its performance based on the reward structure we’ve defined.
 
-At around 10,000 steps, there is a significant shift in the results. This is due to an issue with the initial reward setup, where the negative reward for taking damage was too high. As a result, the agent started avoiding fights by running away from the boss. After adjusting the reward policy, the agent began learning more appropriate behaviors.
-
-Between 10,000 and 20,000 steps, the agent explored strategies to earn higher rewards, it finds one way to earn score is to simply survive, so it heals very frequently and prefers dodge rather than attack. This led to an increase in ep_len_mean, as the agent took longer to complete episodes. From 20,000 to 35,000 steps, the agent became more familiar with fighting the boss and even started winning at times, it finds out that sometimes choose attack can earn it higher scores than heal or dodge, which caused ep_len_mean to decrease. This is also reflected in ep_rew_mean, which has been steadily increasing since the 10k mark, though it has not yet stabilized.
+Between 0 and 5000 steps, the agent explored strategies to earn higher rewards. It finds out one way is to simply live longer, this led to an increase in ep_len_mean, as the agent uses more healing and dodge, which took longer to complete episodes. Since 5,000 steps, the agent became more familiar with fighting, it finds out that sometimes choose attack can earn it higher scores than heal or dodge, which caused ep_len_mean to decrease. This is also reflected in ep_rew_mean, which has been steadily increasing since the 5000 step. This means our ai agent always tries to find a way to earn higher rewards.
 
 <hr>
 
