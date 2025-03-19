@@ -21,7 +21,7 @@ The inputs for our AI agent are the captured screenshot, the boss and player HP 
 <hr>
 
 ## Approach
-For the initial baseline approaches, we have the screenshot, boss hp bar, and player hp percentage with stamina as input; we also have both trivial actions and those are not, including simple four-direction movements(wasd) and combined actions like jump attack.
+For the initial baseline approaches, we have the screenshot (1920X1080 downsample to 400x225), boss hp bar, and player hp percentage with stamina as input; we also have both trivial actions and those are not, including simple four-direction movements(wasd) and combined actions like jump attack.
 
 Admittedly, this baseline approaches seems great, since we have lots of actions, flexible indeed! So our final AI agent should be able to handle very complicated cases! However, this approach did not work very well in the end because: 
 1. Stamina is not that important as an input for our AI agent. Letting it be one of the inputs might trivialize the decisions.
